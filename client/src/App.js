@@ -1,139 +1,79 @@
-import React from "react";
-import {
-    BrowserRouter as Router,
-    Route,
-    Link,
-    Redirect,
-    withRouter
-} from "react-router-dom";
+import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
+import { Navbar, NavItem, Nav, Form, FormControl, Button } from "react-bootstrap";
 
-import { Grid, Row, Col, Navbar, Nav, NavItem } from "react-bootstrap";
-
+import Product from "./components/Product";
 import ProductList from "./components/ProductList";
+import Home from "./components/Home";
 
-////////////////////////////////////////////////////////////
-// 1. Click the public page
-// 2. Click the protected page
-// 3. Log in
-// 4. Click the back button, note the URL each time
+import { getProductsData, getCategoriesData } from "./utils/api";
 
-const AuthExample = () => (
-    <Router>
-        <div>
-        <Navbar inverse collapseOnSelect>
-            <Navbar.Header>
-                <Navbar.Brand>
-                    <Link to="/">React-Bootstrap</Link>
-                </Navbar.Brand>
-                <Navbar.Toggle />
-            </Navbar.Header>
-            <Navbar.Collapse>
-                <ul className="nav navbar-nav">
-                    <li role="presentation">
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li role="presentation">
-                        <Link to="/products">Products</Link>
-                    </li>
-                </ul>
-                <Nav pullRight>
-                    <NavItem eventKey={1} href="/login">
-                        <AuthButton />
-                    </NavItem>
-                </Nav>
-            </Navbar.Collapse>
-        </Navbar>
-
-        <Grid>
-            <Row className="">
-                <Col xs={12} md={12}>
-                    <Route exact path="/" component={Public} />
-                    <Route path="/login" component={Login} />
-                    <Route exact path="/products" component={ProductList} />
-                    <Route path="/products/page/:page" component={ProductList} />
-                </Col>
-            </Row>
-        </Grid>
-    </div>
-    </Router>
-);
-
-const fakeAuth = {
-    isAuthenticated: false,
-    authenticate(cb) {
-        this.isAuthenticated = true;
-        setTimeout(cb, 100); // fake async
-    },
-    signout(cb) {
-        this.isAuthenticated = false;
-        setTimeout(cb, 100);
-    }
-};
-
-const AuthButton = withRouter(
-    ({ history }) =>
-        fakeAuth.isAuthenticated ? (
-            <p>
-                Welcome!{" "}
-                <button
-                    onClick={() => {
-                        fakeAuth.signout(() => history.push("/"));
-                    }}
-                >
-                    Sign out
-                </button>
-            </p>
-        ) : (
-            <p>You are not logged in.</p>
-        )
-);
-
-const PrivateRoute = ({ component: Component, ...rest }) => (
-    <Route
-        {...rest}
-        render={props =>
-            fakeAuth.isAuthenticated ? (
-                <Component {...props} />
-            ) : (
-                <Redirect
-                    to={{
-                        pathname: "/login",
-                        state: { from: props.location }
-                    }}
-                />
-            )
-        }
-    />
-);
-
-const Public = () => <h3>Public</h3>;
-
-class Login extends React.Component {
+class App extends Component {
     state = {
-        redirectToReferrer: false
+        categories: [],
+        products: []
     };
 
-    login = () => {
-        fakeAuth.authenticate(() => {
-            this.setState({ redirectToReferrer: true });
+    getProducts() {
+        getProductsData().then((products) => {
+            this.setState({products});
         });
-    };
+    }
+
+    getCategories() {
+        getCategoriesData().then((categories) => {
+            this.setState({categories});
+            console.info(this.state);
+        });
+    }
+
+    componentDidMount() {
+        this.getProducts();
+        this.getCategories();
+    }
 
     render() {
-        const { from } = this.props.location.state || { from: { pathname: "/" } };
-        const { redirectToReferrer } = this.state;
-
-        if (redirectToReferrer) {
-            return <Redirect to={from} />;
-        }
-
         return (
-            <div>
-                <p>You must log in to view the page at {from.pathname}</p>
-                <button onClick={this.login}>Log in</button>
-            </div>
+            <Router>
+                <div>
+                    <header>
+                        <Navbar inverse fixedTop fluid
+                                className={"navbar navbar-expand-md navbar-dark fixed-top bg-dark"}>
+                            <Navbar.Brand>
+                                <Link to="/">React-Bootstrap</Link>
+                            </Navbar.Brand>
+                            <Navbar.Collapse>
+                                <Nav className={"mr-auto"}>
+                                    <LinkContainer className={"nav-item p-2"} to="/">
+                                        <NavItem eventKey={1}>Home</NavItem>
+                                    </LinkContainer>
+                                    <LinkContainer className={"nav-item p-2"} to="/products">
+                                        <NavItem  eventKey={2}>Products</NavItem>
+                                    </LinkContainer>
+                                </Nav>
+                                <Navbar.Form pullRight>
+                                    <Form inline >
+                                        <FormControl className={"mr-sm-2"} type="text" placeholder="Search" />
+                                        <Button type="submit" className={"btn-outline-success my-2 my-sm-0"}>Submit</Button>
+                                    </Form>
+                                </Navbar.Form>
+                            </Navbar.Collapse>
+                        </Navbar>
+                    </header>
+                    <main>
+                        <Route exact path="/" render={(props) => (
+                            <Home {...props} slider={this.state.products.slice(0, 3)} />
+                        )} />
+                        <Route exact path="/products" component={ProductList} />
+                        <Route path="/products/category/:category" component={ProductList} />
+                        <Route path="/products/page/:page" component={ProductList} />
+                        <Route path="/products/id/:id" component={Product} />
+                    </main>
+                </div>
+            </Router>
         );
     }
 }
 
-export default AuthExample;
+export default App;

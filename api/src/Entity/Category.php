@@ -31,6 +31,13 @@ class Category
      */
     private $name;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text")
+     */
+    private $description;
+
 	/**
 	 * @var ArrayCollection
 	 * @ORM\OneToMany(targetEntity="Product", mappedBy="category")
@@ -97,6 +104,23 @@ class Category
     {
         return $this->name;
     }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
     /**
      * Constructor
      */
