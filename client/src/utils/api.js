@@ -1,8 +1,7 @@
+import React from "react";
 import axios from "axios";
 
 const BASE_API_URL = 'http://127.0.0.1:8000';
-
-export { getProductsData, getProductData, getCategoriesData };
 
 function getProductsData() {
     const url = `${BASE_API_URL}/api/products`;
@@ -18,3 +17,10 @@ function getProductData(id) {
     const url = `${BASE_API_URL}/api/products/` + id;
     return axios.get(url, {headers: {Accept: "application/json"}}).then(response => response.data);
 }
+
+function getTagsData() {
+    const url = `${BASE_API_URL}/api/tags`;
+    return axios.get(url, {headers: {Accept: "application/json"}}).then(response => response.data);
+}
+
+export { getProductsData, getProductData, getCategoriesData, getTagsData };
