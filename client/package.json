@@ -5,14 +5,19 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bootstrap": "^4.1.1",
+    "final-form": "^4.8.2",
     "react": "^16.4.1",
     "react-bootstrap": "^0.32.1",
+    "react-bootstrap-sweetalert": "^4.4.1",
     "react-dom": "^16.4.1",
+    "react-final-form": "^3.6.2",
     "react-google-maps": "^9.4.5",
+    "react-native-awesome-button": "^1.8.2",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
-    "recompose": "^0.27.1"
+    "recompose": "^0.27.1",
+    "styled-components": "^3.3.2"
   },
   "scripts": {
     "start": "react-scripts start",

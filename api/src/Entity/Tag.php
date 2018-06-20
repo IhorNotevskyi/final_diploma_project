@@ -5,11 +5,13 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Tag
  *
  * @ApiResource
+ *
  * @ORM\Table(name="tag")
  * @ORM\Entity(repositoryClass="App\Repository\TagRepository")
  */
@@ -17,6 +19,8 @@ class Tag
 {
     /**
      * @var int
+     *
+     * @Groups({"product"})
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -26,6 +30,8 @@ class Tag
 
     /**
      * @var string
+     *
+     * @Groups({"product"})
      *
      * @ORM\Column(name="name", type="string", length=255)
      */

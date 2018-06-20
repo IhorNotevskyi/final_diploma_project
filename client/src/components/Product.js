@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Grid, Row, Col } from "react-bootstrap";
+import { Grid, Row, Col, Pagination } from "react-bootstrap";
 
 import { getProductData } from "../utils/api";
 
@@ -33,7 +33,7 @@ class Product extends Component {
         }
 
         return (
-            <Grid>
+            <Grid style={{marginTop: "150px"}}>
                 <Row className={"featurette featurette-divider"}  style={{display: "flex", alignItems: "center"}}>
                     <Col md={5}>
                         <img className="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="500x500"
@@ -52,9 +52,9 @@ class Product extends Component {
                             </p>) : (
                              <div>
                                 <p className="h3 text-danger">{this.state.price} $</p>
-                                 <div style={{marginTop: "20px"}}>
-                                     { productTags.map((item, index) => (
-                                         <span key={index} className="btn btn-sm btn-primary disabled" style={{marginRight: "7px"}}>{item}</span>
+                                 <div style={{marginTop: "30px"}}>
+                                     { productTags.map(item => (
+                                         <small key={item.id} className="text-white rounded" style={{marginRight: "7px", padding: "10px", background: "#8063a6", letterSpacing: ".6px"}}>{item.name}</small>
                                      ))}
                                  </div>
                              </div>

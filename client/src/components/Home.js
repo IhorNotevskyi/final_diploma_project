@@ -13,7 +13,6 @@ class Home extends Component {
     }
 
     render() {
-        console.info(this.props.categories);
         return (
             <div>
                 <Carousel>

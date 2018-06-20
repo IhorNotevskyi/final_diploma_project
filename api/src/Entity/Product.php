@@ -5,11 +5,15 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Product
  *
- * @ApiResource
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"product"}}
+ * })
+ *
  * @ORM\Table(name="product")
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  */
@@ -17,6 +21,8 @@ class Product
 {
     /**
      * @var int
+     *
+     * @Groups({"product"})
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -27,12 +33,16 @@ class Product
     /**
      * @var string
      *
+     * @Groups({"product"})
+     *
      * @ORM\Column(type="string", length=255)
      */
     private $title;
 
     /**
      * @var string
+     *
+     * @Groups({"product"})
      *
      * @ORM\Column(name="description", type="text")
      */
@@ -41,12 +51,16 @@ class Product
     /**
      * @var string
      *
+     * @Groups({"product"})
+     *
      * @ORM\Column(name="price", type="decimal", precision=10, scale=2)
      */
     private $price;
 
     /**
      * @var bool
+     *
+     * @Groups({"product"})
      *
      * @ORM\Column(name="active", type="boolean", options={"default": true})
      */
@@ -55,12 +69,16 @@ class Product
     /**
      * @var string
      *
+     * @Groups({"product"})
+     *
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="products")
      */
     private $category;
 
 	/**
 	 * @var ArrayCollection
+     *
+     * @Groups({"product"})
 	 *
 	 * @ORM\ManyToMany(targetEntity="Tag", inversedBy="products")
 	 */
