@@ -94,7 +94,12 @@ class App extends Component {
                             <Route exact path="/products" component={ProductList} />
                             <Route exact path="/contacts" component={Contacts} />
                             <Route exact path="/advice" component={Advice} />
-                            <Route path="/products/category/:category" component={ProductList} />
+                            <Route path="/products/category/:category" render={(props) => (
+                                <ProductList
+                                    {...props}
+                                    categories={this.state.categories}
+                                />
+                            )} />
                             <Route path="/products/page/:page" component={ProductList} />
                             <Route path="/products/id/:id" component={Product} />
                         </main>

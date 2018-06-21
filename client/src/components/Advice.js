@@ -17,7 +17,7 @@ const normalizePhone = value => {
     if (onlyNums.length <= 7)
         return `(${onlyNums.slice(0, 3)}) ${onlyNums.slice(3, 7)}`;
 
-    return `(${onlyNums.slice(0, 3)}) ${onlyNums.slice(3, 6)}-${onlyNums.slice(6, 8)}-${onlyNums.slice(8, 10)}`;
+    return `(${onlyNums.slice(0, 3)}) ${onlyNums.slice(3, 6)}-${onlyNums.slice(6, 10)}`;
 };
 
 const normalizeName = value => {
@@ -60,7 +60,7 @@ class Advice extends Component {
                     }}
                     validate={values => {
                         const errors = {};
-                        const phonePattern = /^\(\w{3}\) \w{3}-\w{2}-\w{2}$/;
+                        const phonePattern = /^\(\w{3}\) \w{3}-\w{4}$/;
 
                         if (!values.phone)
                             errors.phone = "Required field";
@@ -93,7 +93,7 @@ class Advice extends Component {
                                             Phone
                                             <span style={{color: "red"}}> *</span>
                                         </label>
-                                        <input {...input} type="text" placeholder="(999) 999-99-99" />
+                                        <input {...input} type="text" placeholder="(999) 999-9999" />
                                         {meta.error && meta.touched && <span style={{marginTop: "7px"}}>{meta.error}</span>}
                                     </div>
                                 )}

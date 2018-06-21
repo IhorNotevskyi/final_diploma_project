@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Grid, Row, Col, Pagination } from "react-bootstrap";
+import { Grid, Row, Col } from "react-bootstrap";
 
 import { getProductData } from "../utils/api";
 
@@ -54,7 +54,7 @@ class Product extends Component {
                                 <p className="h3 text-danger">{this.state.price} $</p>
                                  <div style={{marginTop: "30px"}}>
                                      { productTags.map(item => (
-                                         <small key={item.id} className="text-white rounded" style={{marginRight: "7px", padding: "10px", background: "#8063a6", letterSpacing: ".6px"}}>{item.name}</small>
+                                         <small key={item.id} className="text-white rounded" style={{marginRight: "7px", padding: "10px", background: "#8063a6", letterSpacing: ".7px"}}>{item.name}</small>
                                      ))}
                                  </div>
                              </div>
