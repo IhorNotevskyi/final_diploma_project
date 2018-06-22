@@ -34,9 +34,7 @@ const btnDefault = css`
 const btnPrimary = btn('#4f93ce', '#285f8f');
 const btnDanger = btn('#e27c79', '#c9302c');
 
-export default styled.div`
-  font-family: sans-serif;
-  
+export default styled.div` 
   img {
     text-align: center;
     margin-top: 60px;

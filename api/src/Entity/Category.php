@@ -41,6 +41,7 @@ class Category
 
 	/**
 	 * @var ArrayCollection
+     *
 	 * @ORM\OneToMany(targetEntity="Product", mappedBy="category")
 	 */
     private $products;

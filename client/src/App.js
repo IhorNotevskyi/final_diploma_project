@@ -49,6 +49,8 @@ class App extends Component {
     }
 
     render() {
+        let firstThreeProducts = this.state.products.slice(0, 3);
+        let threeRandomProducts = this.state.products.slice(3).sort(() => 0.5 - Math.random()).slice(0, 3);
         return (
             <Router>
                 <div>
@@ -86,22 +88,22 @@ class App extends Component {
                             <Route exact path="/" render={(props) => (
                                 <Home
                                     {...props}
-                                    slider={this.state.products.slice(0, 3)}
-                                    randomProducts={this.state.products.splice(3, 3)}
+                                    slider={firstThreeProducts}
+                                    randomProducts={threeRandomProducts}
                                     categories={this.state.categories}
                                 />
                             )} />
                             <Route exact path="/products" component={ProductList} />
                             <Route exact path="/contacts" component={Contacts} />
                             <Route exact path="/advice" component={Advice} />
-                            <Route path="/products/category/:category" render={(props) => (
+                            <Route exact path="/products/category/:category/page/:page" render={(props) => (
                                 <ProductList {...props} categories={this.state.categories} />
                             )} />
-                            <Route path="/products/category/:category/page/:page" render={(props) => (
+                            <Route exact path="/products/category/:category" render={(props) => (
                                 <ProductList {...props} categories={this.state.categories} />
                             )} />
-                            <Route path="/products/page/:page" component={ProductList} />
-                            <Route path="/products/id/:id" component={Product} />
+                            <Route exact path="/products/page/:page" component={ProductList} />
+                            <Route exact path="/products/id/:id" component={Product} />
                         </main>
                     </div>
                     <footer className="text-center h4" style={{height: "63px", background: "#17171d", marginBottom: "-100px", color: "#1c8515"}}>

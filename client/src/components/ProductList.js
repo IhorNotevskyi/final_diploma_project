@@ -26,6 +26,7 @@ class ProductList extends Component {
     render() {
         let route = this.props.match;
         let products = this.state.products;
+        let categoryId;
         let categoryName;
 
         if (route.params.category) {
@@ -37,13 +38,15 @@ class ProductList extends Component {
 
         if (route.params.category) {
             this.props.categories.map(category => {
-                if (+category.id === +route.params.category)
+                if (+category.id === +route.params.category) {
                     categoryName = category.name;
+                    categoryId = category.id;
+                }
             });
         }
 
         let totalProducts = products.length;
-        let perPage = 6;
+        let perPage = 3;
         let totalPage = Math.ceil(totalProducts / perPage);
         let currentPage = parseInt(route.params.page, 10);
         let page = route.params.page ? currentPage - 1 : 0;
@@ -53,10 +56,8 @@ class ProductList extends Component {
             allPages.push(i);
         }
 
-        if (route.path === '/products' || route.path === '/products/category/:category' || route.path === '/products/category/:category' || route.path === '/products/category/:category/page/:page')
+        if (route.path === '/products' || route.path === '/products/category/:category')
             currentPage = 1;
-
-        // console.info(route.path);
 
         return (
             <Grid>
@@ -69,7 +70,7 @@ class ProductList extends Component {
                     <nav aria-label="pagination">
                         <ul className="pagination pagination-lg justify-content-center" style={{margin: "150px 0 150px"}}>
 
-                            { totalPage > 3 &&
+                            { totalPage > 2 &&
                             <li key={-2} className={"page-item " + (currentPage === 1 || route.path === '/products' ? "disabled" : "")}>
                                 <Link className="page-link" to="/products/page/1">First</Link>
                             </li>
@@ -89,7 +90,7 @@ class ProductList extends Component {
                                 <Link className="page-link" to={"/products/page/" + (currentPage + 1)}>Next</Link>
                             </li>
 
-                            { totalPage > 3 &&
+                            { totalPage > 2 &&
                             <li key={totalPage + 2} className={"page-item " + (currentPage === totalPage ? "disabled" : "")}>
                                 <Link className="page-link" to={"/products/page/" + totalPage}>Last</Link>
                             </li>
@@ -101,29 +102,29 @@ class ProductList extends Component {
                     <nav aria-label="pagination">
                         <ul className="pagination pagination-lg justify-content-center" style={{margin: "150px 0 150px"}}>
 
-                            { totalPage > 3 &&
+                            { totalPage > 2 &&
                             <li key={-2} className={"page-item " + (currentPage === 1 || route.path === '/products/category/:category' ? "disabled" : "")}>
-                                <Link className="page-link" to={route.url + "/page/1"}>First</Link>
+                                <Link className="page-link" to={"/products/category/" + categoryId + "/page/1"}>First</Link>
                             </li>
                             }
 
                             <li key={-1} className={"page-item " + (currentPage === 1 || route.path === '/products/category/:category' ? "disabled" : "")}>
-                                <Link className="page-link" to={route.url + "/page/" + (currentPage - 1)}>Previous</Link>
+                                <Link className="page-link" to={"/products/category/" + categoryId + "/page/" + (currentPage - 1)}>Previous</Link>
                             </li>
 
                             { allPages.map(page => (
                                 <li key={page} className={"page-item " + (currentPage === page ? "active" : "")}>
-                                    <Link className="page-link" to={route.url + "/page/" + page}>{page}</Link>
+                                    <Link className="page-link" to={"/products/category/" + categoryId + "/page/" + page}>{page}</Link>
                                 </li>
                             ))}
 
                             <li key={totalPage + 1} className={"page-item " + (currentPage === totalPage ? "disabled" : "")}>
-                                <Link className="page-link" to={route.url + "/page/" + (currentPage + 1)}>Next</Link>
+                                <Link className="page-link" to={"/products/category/" + categoryId + "/page/" + (currentPage + 1)}>Next</Link>
                             </li>
 
-                            { totalPage > 3 &&
+                            { totalPage > 2 &&
                             <li key={totalPage + 2} className={"page-item " + (currentPage === totalPage ? "disabled" : "")}>
-                                <Link className="page-link" to={route.url + "/page/" + totalPage}>Last</Link>
+                                <Link className="page-link" to={"/products/category/" + categoryId + "/page/" + totalPage}>Last</Link>
                             </li>
                             }
                         </ul>

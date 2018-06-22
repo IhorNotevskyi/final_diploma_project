@@ -3,7 +3,7 @@ import { Form, Field } from "react-final-form";
 import SweetAlert from "react-bootstrap-sweetalert";
 
 import feedback from "../img/feedback.png";
-import Styles from "./AdviceStyles";
+import AdviceStyles from "./AdviceStyles";
 import "../../node_modules/react-bootstrap-sweetalert//lib/dist/SweetAlert";
 
 const normalizePhone = value => {
@@ -45,7 +45,7 @@ class Advice extends Component {
 
     render() {
         return (
-            <Styles>
+            <AdviceStyles>
                 <div>
                     <img src={feedback} alt="Feedback" />
                 </div>
@@ -127,7 +127,7 @@ class Advice extends Component {
                         </form>
                     )}
                 />
-            </Styles>
+            </AdviceStyles>
         );
     }
 }
