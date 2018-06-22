@@ -95,10 +95,10 @@ class App extends Component {
                             <Route exact path="/contacts" component={Contacts} />
                             <Route exact path="/advice" component={Advice} />
                             <Route path="/products/category/:category" render={(props) => (
-                                <ProductList
-                                    {...props}
-                                    categories={this.state.categories}
-                                />
+                                <ProductList {...props} categories={this.state.categories} />
+                            )} />
+                            <Route path="/products/category/:category/page/:page" render={(props) => (
+                                <ProductList {...props} categories={this.state.categories} />
                             )} />
                             <Route path="/products/page/:page" component={ProductList} />
                             <Route path="/products/id/:id" component={Product} />
