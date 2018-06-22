@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { Grid } from "react-bootstrap";
 
@@ -9,14 +9,22 @@ class ProductList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            products: []
+            products: [],
+            buttons: "none",
+            dots: "inline"
         };
+
+        this.moveDots = this.moveDots.bind(this);
     }
 
     getProducts() {
         getProductsData().then(products => {
             this.setState({ products });
         });
+    }
+
+    moveDots() {
+        this.setState({ buttons: "inline", dots: "none" });
     }
 
     componentDidMount() {
@@ -46,7 +54,7 @@ class ProductList extends Component {
         }
 
         let totalProducts = products.length;
-        let perPage = 3;
+        let perPage = 6;
         let totalPage = Math.ceil(totalProducts / perPage);
         let currentPage = parseInt(route.params.page, 10);
         let page = route.params.page ? currentPage - 1 : 0;
@@ -58,6 +66,8 @@ class ProductList extends Component {
 
         if (route.path === '/products' || route.path === '/products/category/:category')
             currentPage = 1;
+
+        console.info(this.state);
 
         return (
             <Grid>
@@ -81,9 +91,20 @@ class ProductList extends Component {
                             </li>
 
                             { allPages.map(page => (
-                                <li key={page} className={"page-item " + (currentPage === page ? "active" : "")}>
-                                    <Link className="page-link" to={"/products/page/" + page}>{page}</Link>
-                                </li>
+                                <Fragment>
+                                    { page === 2 && totalPage > 3 &&
+                                    <li key={-3} className="page-item" onClick={this.moveDots} style={{cursor: "pointer", display: this.state.dots}}>
+                                        <span className="page-link">...</span>
+                                    </li>
+                                    }
+                                    <li
+                                        key={page}
+                                        className={"page-item " + (currentPage === page ? "active" : "")}
+                                        style={{display: (totalPage > 3 && page !== 1 && page !== totalPage ? this.state.buttons : this.state.dots)}}
+                                    >
+                                        <Link className="page-link" to={"/products/page/" + page}>{page}</Link>
+                                    </li>
+                                </Fragment>
                             ))}
 
                             <li key={totalPage + 1} className={"page-item " + (currentPage === totalPage ? "disabled" : "")}>
