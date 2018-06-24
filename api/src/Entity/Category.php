@@ -49,9 +49,16 @@ class Category
 	/**
 	 * @var bool
 	 *
-	 * @ORM\Column(name="active", type="boolean", options={"default": true})
+	 * @ORM\Column(name="active", type="boolean", options={"auth": true})
 	 */
     private $active;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="image", type="string", length=255, unique=true)
+     */
+    private $image;
 
 	/**
 	 * @return bool
@@ -121,6 +128,30 @@ class Category
     public function setDescription(string $description): void
     {
         $this->description = $description;
+    }
+
+    /**
+     * Set image
+     *
+     * @param string $image
+     *
+     * @return Category
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 
     /**

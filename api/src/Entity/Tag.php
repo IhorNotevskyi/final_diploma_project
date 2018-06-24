@@ -78,6 +78,7 @@ class Tag
     {
         return $this->name;
     }
+
     /**
      * Constructor
      */

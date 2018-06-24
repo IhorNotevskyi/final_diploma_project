@@ -1,0 +1,26 @@
+{% extends 'layout.html.twig' %}
+
+{% block main %}
+    <h1>Product list</h1>
+    <hr>
+    {% for product in products %}
+        <p><a href="{{ path('product_edit', { id: product.id }) }}">Product {{ product.id }}</a></p>
+        <p>Category: {{ product.category.name }}</p>
+        <p>Title: {{ product.title }}</p>
+        <p>Description: {{ product.description }}</p>
+        <p>Price: {{ product.price }} $</p>
+        <p>Active:
+            {% if product.active %}
+                Yes
+            {% endif %}
+        </p>
+        <p>Tags:
+            {#{{ product.tags }}#}
+        </p>
+        <hr>
+    {% endfor %}
+    <form method="post" action="" enctype="multipart/form-data">
+        <input type="text" name="text">
+        <input type="submit">
+    </form>
+{% endblock %}

@@ -62,12 +62,21 @@ class Product
      *
      * @Groups({"product"})
      *
-     * @ORM\Column(name="active", type="boolean", options={"default": true})
+     * @ORM\Column(name="active", type="boolean", options={"auth": true})
      */
     private $active = true;
-    
+
     /**
      * @var string
+     *
+     * @Groups({"product"})
+     *
+     * @ORM\Column(type="string", length=255)
+     */
+    private $image;
+    
+    /**
+     * @var Category|null
      *
      * @Groups({"product"})
      *
@@ -191,6 +200,30 @@ class Product
     }
 
     /**
+     * Set title
+     *
+     * @param string $image
+     *
+     * @return Product
+     */
+    public function setImage($image)
+    {
+        $this->title = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
      * Set category
      *
      * @param string $category
@@ -207,7 +240,7 @@ class Product
     /**
      * Get category
      *
-     * @return string
+     * @return Category|null
      */
     public function getCategory()
     {
@@ -264,12 +297,5 @@ class Product
     public function getTags()
     {
         return $this->tags;
-    }
-
-	public function toArray()
-	{
-		return [
-			'id' => $this->id
-		];
     }
 }

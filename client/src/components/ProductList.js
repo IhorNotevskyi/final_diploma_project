@@ -46,7 +46,7 @@ class ProductList extends Component {
         }
 
         let totalProducts = products.length;
-        let perPage = 2;
+        let perPage = 3;
         let totalPage = Math.ceil(totalProducts / perPage);
         let currentPage = parseInt(route.params.page, 10);
         let page = route.params.page ? currentPage - 1 : 0;
