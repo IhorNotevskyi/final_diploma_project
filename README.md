@@ -1,25 +1,23 @@
-В api/.env нужно выставить свои данные для доступа к БД
+В api/.env нужно выставить свои данные для доступа к БД<br>
+в api/.env.dist пример заполнения: DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name<br>
+я сбросил свои данные, если у тебя там пароль есть к БД или БД будет по-другому называться, то нужно исправить<br>
 
-в api/.env.dist пример заполнения: DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name
+потом:<br>
+cd api<br>
+composer install<br>
 
-я сбросил свои данные, если у тебя там пароль есть к БД или БД будет по-другому называться, то нужно исправить
+cd client<br>
+npm install<br>
 
-потом:
-cd api
-composer install
+в одной консоли:<br>
+cd api<br>
+bin/console server:start<br>
 
-cd client
-npm install
+в другой консоли:<br>
+cd client<br>
+npm start<br>
 
-в одной консоли:
-cd api
-bin/console server:start
+должно работь<br>
 
-в другой консоли:
-cd client
-npm start
-
-должно работь
-
-на http://localhost:8000/api все данные
-на http://localhost:8000/api/products можно посмотреть в каком виде данные приходят
+на http://localhost:8000/api все данные<br>
+на http://localhost:8000/api/products можно посмотреть в каком виде данные приходят<br>
