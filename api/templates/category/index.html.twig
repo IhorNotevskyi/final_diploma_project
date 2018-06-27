@@ -1,0 +1,51 @@
+{% extends 'layout.html.twig' %}
+
+{% block main %}
+    <h1 class="text-center">Category list</h1>
+    <a href="{{ path('category_add') }}" class="d-block text-right">
+        <button class="btn btn-lg btn-success" style="padding: 20px 50px">Add new category</button>
+    </a>
+    <div class="table-responsive text-center" style="margin-top: 20px">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Active</th>
+                <th>Image</th>
+                <th>Controls</th>
+            </tr>
+            </thead>
+            <tbody style="vertical-align: center">
+            {% for category in categories %}
+                <tr>
+                    <td>{{ category.id }}</td>
+                    <td>{{ category.name }}</td>
+                    <td class="text-justify">{{ category.description }}</td>
+                    <td>
+                        {% if category.active %} Yes
+                        {% else %} No
+                        {% endif %}
+                    </td>
+                    <td>
+                        <img src="{{ asset(category.image|replace({'http://localhost:8000/': ''})) }}" alt="Image" style="width: 100px; height: 100px">
+                    </td>
+                    <td>
+                        <a href="{{ path('category_edit', { id: category.id }) }}">
+                            <button class="btn btn-sm btn-block btn-primary" style="margin-bottom: 3px">Edit</button>
+                        </a>
+                        <a href="{{ path('category_delete', { id: category.id }) }}" onclick="return confirmDelete()">
+                            <button class="btn btn-sm btn-block btn-danger">Delete</button>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/confirm.js') }}"></script>
+{% endblock %}

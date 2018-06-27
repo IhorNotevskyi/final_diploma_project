@@ -49,7 +49,7 @@ class Category
 	/**
 	 * @var bool
 	 *
-	 * @ORM\Column(name="active", type="boolean", options={"auth": true})
+	 * @ORM\Column(name="active", type="boolean", options={"user": true})
 	 */
     private $active;
 

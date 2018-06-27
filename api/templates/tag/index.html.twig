@@ -1,0 +1,41 @@
+{% extends 'layout.html.twig' %}
+
+{% block main %}
+    <h1 class="text-center">Tag list</h1>
+    <div class="container" style="margin: 0 auto; max-width: 50%">
+        <a href="{{ path('tag_add') }}" class="d-block text-right">
+            <button class="btn btn-lg btn-success" style="padding: 20px 50px">Add new tag</button>
+        </a>
+        <div class="table-responsive text-center"  style="margin-top: 20px">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Controls</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tag in tags %}
+                        <tr>
+                            <td class="align-middle" style="width: 20%">{{ tag.id }}</td>
+                            <td class="align-middle" style="width: 50%">{{ tag.name }}</td>
+                            <td class="align-middle">
+                                <a href="{{ path('tag_edit', { id: tag.id }) }}">
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                </a>
+                                <a href="{{ path('tag_delete', { id: tag.id }) }}" onclick="return confirmDelete()">
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/confirm.js') }}"></script>
+{% endblock %}

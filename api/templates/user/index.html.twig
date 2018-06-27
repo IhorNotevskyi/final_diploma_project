@@ -1,0 +1,51 @@
+{% extends 'layout.html.twig' %}
+
+{% block main %}
+    <h1 class="text-center">Admin list</h1>
+
+        <a href="{{ path('user_add') }}" class="d-block text-right">
+            <button class="btn btn-lg btn-success" style="padding: 20px 50px">Add new admin</button>
+        </a>
+        <div class="table-responsive text-center" style="margin-top: 20px">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Email</th>
+                    <th>Active</th>
+                    <th>Controls</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.password }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            {% if user.active %} Yes
+                            {% else %} No
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('user_edit', { id: user.id }) }}">
+                                <button class="btn btn-sm btn-block btn-primary"  style="margin-bottom: 3px">Edit</button>
+                            </a>
+                            <a href="{{ path('user_delete', { id: user.id }) }}" onclick="return confirmDelete()">
+                                <button class="btn btn-sm btn-block btn-danger">Delete</button>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tbody>
+            </table>
+        </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/confirm.js') }}"></script>
+{% endblock %}

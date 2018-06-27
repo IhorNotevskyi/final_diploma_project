@@ -62,7 +62,7 @@ class Product
      *
      * @Groups({"product"})
      *
-     * @ORM\Column(name="active", type="boolean", options={"auth": true})
+     * @ORM\Column(name="active", type="boolean", options={"user": true})
      */
     private $active = true;
 
@@ -71,7 +71,7 @@ class Product
      *
      * @Groups({"product"})
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $image;
     

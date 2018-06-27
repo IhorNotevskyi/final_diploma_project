@@ -1,0 +1,59 @@
+{% extends 'layout.html.twig' %}
+
+{% block main %}
+    <h1 class="text-center">Callback list</h1>
+    <div class="container">
+        <a href="{{ path('callback_add') }}" class="d-block text-right">
+            <button class="btn btn-lg btn-success" style="padding: 20px 50px">Add new callback</button>
+        </a>
+        <div class="table-responsive text-center" style="margin-top: 20px">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 5%">#</th>
+                    <th style="width: 20%">Name</th>
+                    <th style="width: 15%">Phone</th>
+                    <th>Message</th>
+                    <th style="width: 5%">Active</th>
+                    <th style="width: 13%">Controls</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for callback in callbacks %}
+                    <tr>
+                        <td>{{ callback.id }}</td>
+                        <td>
+                            {% if callback.message %} {{ callback.name }}
+                            {% else %} &mdash;
+                            {% endif %}
+                        </td>
+                        <td>{{ callback.phone }}</td>
+                        {% if callback.message %}
+                            <td class="text-center">{{ callback.message }}</td>
+                        {% else %}
+                            <td>&mdash;</td>
+                        {% endif %}
+                        <td>
+                            {% if callback.active %} Yes
+                            {% else %} No
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('callback_edit', { id: callback.id }) }}">
+                                <button class="btn btn-sm btn-primary">Edit</button>
+                            </a>
+                            <a href="{{ path('callback_delete', { id: callback.id }) }}" onclick="return confirmDelete()">
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/confirm.js') }}"></script>
+{% endblock %}

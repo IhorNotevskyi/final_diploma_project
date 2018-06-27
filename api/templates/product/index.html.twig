@@ -1,26 +1,61 @@
 {% extends 'layout.html.twig' %}
 
 {% block main %}
-    <h1>Product list</h1>
-    <hr>
-    {% for product in products %}
-        <p><a href="{{ path('product_edit', { id: product.id }) }}">Product {{ product.id }}</a></p>
-        <p>Category: {{ product.category.name }}</p>
-        <p>Title: {{ product.title }}</p>
-        <p>Description: {{ product.description }}</p>
-        <p>Price: {{ product.price }} $</p>
-        <p>Active:
-            {% if product.active %}
-                Yes
-            {% endif %}
-        </p>
-        <p>Tags:
-            {#{{ product.tags }}#}
-        </p>
-        <hr>
-    {% endfor %}
-    <form method="post" action="" enctype="multipart/form-data">
-        <input type="text" name="text">
-        <input type="submit">
-    </form>
+    <h1 class="text-center">Product list</h1>
+    <a href="{{ path('product_add') }}" class="d-block text-right">
+        <button class="btn btn-lg btn-success" style="padding: 20px 50px">Add new product</button>
+    </a>
+    <div class="table-responsive text-center" style="margin-top: 20px">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Category</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Price, $</th>
+                    <th>Active</th>
+                    <th>Tags</th>
+                    <th>Image</th>
+                    <th>Controls</th>
+                </tr>
+            </thead>
+            <tbody style="vertical-align: center">
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.id }}</td>
+                    <td>{{ product.category.name }}</td>
+                    <td>{{ product.title }}</td>
+                    <td class="text-justify">{{ product.description }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>
+                        {% if product.active %} Yes
+                        {% else %} No
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% for tag in product.tags %}
+                            <span style="padding: 3px 7px; line-height: 195%; background: #d1d1ff">{{ tag.name }}</span>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <img src="{{ asset(product.image|replace({'http://localhost:8000/': ''})) }}" alt="Image" style="width: 100px; height: 100px">
+                    </td>
+                    <td>
+                        <a href="{{ path('product_edit', { id: product.id }) }}">
+                            <button class="btn btn-sm btn-block btn-primary" style="margin-bottom: 3px">Edit</button>
+                        </a>
+                        <a href="{{ path('product_delete', { id: product.id }) }}" onclick="return confirmDelete()">
+                            <button class="btn btn-sm btn-block btn-danger">Delete</button>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/confirm.js') }}"></script>
 {% endblock %}

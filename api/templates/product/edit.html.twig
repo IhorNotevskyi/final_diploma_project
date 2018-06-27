@@ -1,5 +1,21 @@
 {% extends 'layout.html.twig' %}
 
 {% block main %}
-    <h1>Product {{ product.id }} - {{ product.title }}</h1>
+    <h1>Product #{{ product.id }}</h1>
+    <p>Title: {{ product.title }}</p>
+    <p>Description: {{ product.description }}</p>
+    <p>Price: {{ product.price }} $</p>
+    <p>Active:
+        {% if product.active %}
+            Yes
+        {% endif %}
+    </p>
+    <p>Tags:
+        {% for tag in product.tags %}
+            <span style="padding: 3px 7px; background: #d1d1ff">{{ tag.name }}</span>
+        {% endfor %}
+    </p>
+    <p>Image:
+        <img src="{{ asset(product.image|replace({'http://localhost:8000/': ''})) }}" alt="Image" style="width: 100px; height: 100px">
+    </p>
 {% endblock %}

@@ -17,22 +17,27 @@
         <div class="sidebar-header">
             <h3 style="color: #7ffe93">Symfony<br> API - React</h3>
         </div>
+
         <ul class="list-unstyled components">
             <p class="admin-panel font-weight-bold" style="color: #ffbb5f">Admin Panel</p>
             <li>
-                <a href="#">Categories</a>
+                <a href="{{ path('category_list') }}">Categories</a>
             </li>
             <li>
-                <a href="#">Products</a>
+                <a href="{{ path('product_list') }}">Products</a>
             </li>
             <li>
-                <a href="#">Tags</a>
+                <a href="{{ path('tag_list') }}">Tags</a>
             </li>
             <li>
-                <a href="#">Admins</a>
+                <a href="{{ path('user_list') }}">Admins</a>
+            </li>
+            <li>
+                <a href="{{ path('callback_list') }}">Callbacks</a>
             </li>
         </ul>
     </nav>
+
     <div id="content">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
@@ -55,9 +60,15 @@
                 </div>
             </div>
         </nav>
+
+        {% for flash in app.session.flashbag.get('success') %}
+            <div class="alert alert-success">{{ flash }}</div>
+        {% endfor %}
+
         {% block main %}
             <h2>Collapsible Sidebar Using Bootstrap 4</h2>
         {% endblock %}
+
     </div>
 </div>
 
@@ -65,13 +76,7 @@
 <script src="{{ asset('js/bootstrap/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap/bootstrap.min.js') }}"></script>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').toggleClass('active');
-        });
-    });
-</script>
+<script src="{{ asset('js/sidebar.js') }}"></script>
 
 {% block javascripts %}{% endblock %}
 

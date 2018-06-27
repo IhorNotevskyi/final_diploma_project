@@ -2,33 +2,33 @@
 
 namespace App\Controller;
 
-use App\Entity\Product;
-use App\Form\ProductType;
+use App\Entity\Category;
+use App\Form\CategoryType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 
-class ProductController extends Controller
+class CategoryController extends Controller
 {
     /**
-     * @Route("/admin/products", name="product_list")
+     * @Route("/admin/categories", name="category_list")
      * @Template()
      */
     public function indexAction()
     {
-        $products = $this
+        $categories = $this
             ->getDoctrine()
-            ->getRepository('App:Product')
+            ->getRepository('App:Category')
             ->findBy([], ['id' => 'DESC'])
         ;
 
-        return ['products' => $products];
+        return ['categories' => $categories];
     }
 
     /**
-     * @Route("/admin/products/add", name="product_add")
+     * @Route("/admin/categories/add", name="category_add")
      * @Template()
      *
      * @param Request $request
@@ -36,50 +36,50 @@ class ProductController extends Controller
      */
     public function addAction(Request $request)
     {
-        $form = $this->createForm(ProductType::class);
+        $form = $this->createForm(CategoryType::class);
         $form->add('Save', SubmitType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $product = $form->getData();
+            $category = $form->getData();
 
             $em = $this->getDoctrine()->getManager();
-            $em->persist($product);
+            $em->persist($category);
             $em->flush();
 
             $this->addFlash('success', 'Saved');
 
-            return $this->redirectToRoute('product_add');
+            return $this->redirectToRoute('category_add');
         }
 
-        return ['product_form' => $form->createView()];
+        return ['category_form' => $form->createView()];
     }
 
     /**
-     * @Route("/admin/products/edit/{id}", name="product_edit", requirements={"id": "[0-9]+"})
+     * @Route("/admin/categories/{id}", name="category_edit", requirements={"id": "[0-9]+"})
      * @Template()
      *
-     * @param Product $product
+     * @param Category $category
      * @return array
      */
-    public function editAction(Product $product)
+    public function editAction(Category $category)
     {
-        return ['product' => $product];
+        return ['category' => $category];
     }
 
     /**
-     * @Route("/admin/products/delete/{id}", name="product_delete", requirements={"id": "[0-9]+"})
+     * @Route("/admin/categories/delete/{id}", name="category_delete", requirements={"id": "[0-9]+"})
      * @Template()
      *
-     * @param Product $product
+     * @param Category $category
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function deleteAction(Product $product)
+    public function deleteAction(Category $category)
     {
         $imageName = $this
             ->getDoctrine()
-            ->getRepository('App:Product')
-            ->getImageByProduct($product)
+            ->getRepository('App:Category')
+            ->getImageByCategory($category)
         ;
 
         $imageFullPath = implode('', array_shift($imageName));
@@ -88,12 +88,12 @@ class ProductController extends Controller
 
         $this
             ->getDoctrine()
-            ->getRepository('App:Product')
-            ->deleteProduct($product)
+            ->getRepository('App:Category')
+            ->deleteCategory($category)
         ;
 
         unlink(ROOT . DS . 'img' . DS . $image);
 
-        return $this->redirectToRoute('product_list');
+        return $this->redirectToRoute('category_list');
     }
 }
