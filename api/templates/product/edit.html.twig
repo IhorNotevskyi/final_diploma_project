@@ -1,21 +1,11 @@
 {% extends 'layout.html.twig' %}
 
 {% block main %}
-    <h1>Product #{{ product.id }}</h1>
-    <p>Title: {{ product.title }}</p>
-    <p>Description: {{ product.description }}</p>
-    <p>Price: {{ product.price }} $</p>
-    <p>Active:
-        {% if product.active %}
-            Yes
-        {% endif %}
-    </p>
-    <p>Tags:
-        {% for tag in product.tags %}
-            <span style="padding: 3px 7px; background: #d1d1ff">{{ tag.name }}</span>
-        {% endfor %}
-    </p>
-    <p>Image:
-        <img src="{{ asset(product.image|replace({'http://localhost:8000/': ''})) }}" alt="Image" style="width: 100px; height: 100px">
-    </p>
+    <h1 class="text-center" style="margin-bottom: 30px">Edit product #{{ product.id }}</h1>
+    <div class="container" style="max-width: 50%">
+        {{ form(product_form, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="text-center">
+            <img src="{{ asset(product.image|replace({'http://localhost:8000/': ''})) }}" alt="Image" style="max-width: 400px">
+        </div>
+    </div>
 {% endblock %}

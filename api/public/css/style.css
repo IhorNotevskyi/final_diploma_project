@@ -148,6 +148,11 @@ a.article:hover {
     transition: all 0.3s;
 }
 
+.fa-sign-out-alt {
+    padding: 3px 5px 0 0;
+    width: 25px;
+}
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */

@@ -18,7 +18,10 @@ class CategoryType extends AbstractType
             ->add('name')
             ->add('description')
             ->add('active')
-            ->add('image', FileType::class)
+            ->add('image', FileType::class, [
+                'data_class' => null,
+                'label' => 'Upload image (only "image/jpeg")'
+            ])
         ;
     }
 

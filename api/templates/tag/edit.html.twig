@@ -1,6 +1,8 @@
 {% extends 'layout.html.twig' %}
 
 {% block main %}
-    <h1>Tag {{ tag.id }}</h1>
-    <p>Name: {{ tag.name }}</p>
+    <h1 class="text-center" style="margin-bottom: 30px">Edit tag #{{ tag.id }}</h1>
+    <div class="container" style="max-width: 50%">
+        {{ form(tag_form, {'attr': {'novalidate': 'novalidate'}}) }}
+    </div>
 {% endblock %}

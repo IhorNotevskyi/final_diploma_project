@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="../../../../favicon.ico">
+    <title>{% block title %}Admin Panel{% endblock %}</title>
+    <link href="{{ asset('css/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cover.css') }}" rel="stylesheet">
+</head>
+<body class="text-center">
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+        <header class="masthead mb-auto">
+            <div class="inner">
+            </div>
+        </header>
+        <main role="main" class="inner cover">
+            {% block main %}{% endblock %}
+        </main>
+        <footer class="mastfoot mt-auto">
+            <div class="inner"></div>
+        </footer>
+    </div>
+    <script src="{{ asset('js/bootstrap//jquery-3.3.1.js') }}"></script>
+    <script src="{{ asset('js/bootstrap/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap/bootstrap.min.js') }}"></script>
+</body>
+</html>

@@ -56,15 +56,32 @@ class CallbackController extends Controller
     }
 
     /**
-     * @Route("/admin/callbacks/{id}", name="callback_edit", requirements={"id": "[0-9]+"})
+     * @Route("/admin/callbacks/edit/{id}", name="callback_edit", requirements={"id": "[0-9]+"})
      * @Template()
      *
      * @param Callback $callback
-     * @return array
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function editAction(Callback $callback)
+    public function editAction(Callback $callback, Request $request)
     {
-        return ['callback' => $callback];
+        $form = $this->createForm(CallbackType::class, $callback);
+        $form->add('Save', SubmitType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $callback = $form->getData();
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($callback);
+            $em->flush();
+
+            $this->addFlash('success', 'Saved');
+
+            return $this->redirectToRoute('callback_edit', ['id' => $callback->getId()]);
+        }
+
+        return ['callback' => $callback, 'callback_form' => $form->createView()];
     }
 
     /**

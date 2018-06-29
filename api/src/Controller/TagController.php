@@ -60,11 +60,28 @@ class TagController extends Controller
      * @Template()
      *
      * @param Tag $tag
-     * @return array
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function editAction(Tag $tag)
+    public function editAction(Tag $tag, Request $request)
     {
-        return ['tag' => $tag];
+        $form = $this->createForm(TagType::class, $tag);
+        $form->add('Save', SubmitType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $tag = $form->getData();
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($tag);
+            $em->flush();
+
+            $this->addFlash('success', 'Saved');
+
+            return $this->redirectToRoute('tag_edit', ['id' => $tag->getId()]);
+        }
+
+        return ['tag' => $tag, 'tag_form' => $form->createView()];
     }
 
     /**

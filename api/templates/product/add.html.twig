@@ -3,6 +3,6 @@
 {% block main %}
     <h1 class="text-center" style="margin-bottom: 30px">Add new product</h1>
     <div class="container" style="max-width: 50%">
-        {{ form(product_form) }}
+        {{ form(product_form, {'attr': {'novalidate': 'novalidate'}}) }}
     </div>
 {% endblock %}

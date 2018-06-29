@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends Controller
 {
@@ -32,9 +33,10 @@ class UserController extends Controller
      * @Template()
      *
      * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request, UserPasswordEncoderInterface $encoder)
     {
         $form = $this->createForm(UserType::class);
         $form->add('Save', SubmitType::class);
@@ -42,6 +44,10 @@ class UserController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
+
+            $password = $user->getPassword();
+            $encodedPassword = $encoder->encodePassword($user, $password);
+            $user->setPassword($encodedPassword);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);

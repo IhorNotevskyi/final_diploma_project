@@ -1,15 +1,11 @@
 {% extends 'layout.html.twig' %}
 
 {% block main %}
-    <h1>Category {{ category.id }}</h1>
-    <p>Name: {{ category.name }}</p>
-    <p>Description: {{ category.description }}</p>
-    <p>Active:
-        {% if category.active %}
-            Yes
-        {% endif %}
-    </p>
-    <p>Image:
-        <img src="{{ asset(category.image|replace({'http://localhost:8000/': ''})) }}" alt="Image" style="width: 100px; height: 100px">
-    </p>
+    <h1 class="text-center" style="margin-bottom: 30px">Edit category #{{ category.id }}</h1>
+    <div class="container" style="max-width: 50%">
+        {{ form(category_form, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="text-center">
+            <img src="{{ asset(category.image|replace({'http://localhost:8000/': ''})) }}" alt="Image" style="max-width: 400px">
+        </div>
+    </div>
 {% endblock %}

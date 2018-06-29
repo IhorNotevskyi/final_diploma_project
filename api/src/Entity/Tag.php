@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Tag
@@ -34,6 +35,8 @@ class Tag
      * @Groups({"product"})
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
+     *
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -84,7 +87,7 @@ class Tag
      */
     public function __construct()
     {
-        $this->products = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->products = new ArrayCollection;
     }
 
     /**
@@ -96,8 +99,7 @@ class Tag
      */
     public function addProduct(\App\Entity\Product $product)
     {
-        $this->products[] = $product;
-
+        $this->products->add($product);
         return $this;
     }
 
@@ -105,10 +107,13 @@ class Tag
      * Remove product
      *
      * @param \App\Entity\Product $product
+     *
+     * @return self
      */
     public function removeProduct(\App\Entity\Product $product)
     {
         $this->products->removeElement($product);
+        return $this;
     }
 
     /**

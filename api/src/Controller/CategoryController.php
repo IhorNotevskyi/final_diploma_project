@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
+use App\Service\FileUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -32,16 +33,21 @@ class CategoryController extends Controller
      * @Template()
      *
      * @param Request $request
+     * @param FileUploader $fileUploader
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request, FileUploader $fileUploader)
     {
-        $form = $this->createForm(CategoryType::class);
+        $category = new Category();
+        $form = $this->createForm(CategoryType::class, $category);
         $form->add('Save', SubmitType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $category = $form->getData();
+            $file = $category->getImage();
+            $fileName = $fileUploader->upload($file);
+            $category->setImage($fileName);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($category);
@@ -60,11 +66,45 @@ class CategoryController extends Controller
      * @Template()
      *
      * @param Category $category
-     * @return array
+     * @param Request $request
+     * @param FileUploader $fileUploader
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function editAction(Category $category)
+    public function editAction(Category $category, Request $request, FileUploader $fileUploader)
     {
-        return ['category' => $category];
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->add('Save', SubmitType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $category = $form->getData();
+            $file = $category->getImage();
+
+            $imageName = $this
+                ->getDoctrine()
+                ->getRepository('App:Category')
+                ->getImageByCategory($category)
+            ;
+
+            $imageFullPath = implode('', array_shift($imageName));
+            $imagePath = SITE . DS . 'img' . DS;
+            $image = str_replace($imagePath, "", $imageFullPath);
+
+            $fileName = $fileUploader->upload($file);
+            $category->setImage($fileName);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($category);
+            $em->flush();
+
+            unlink(ROOT . DS . 'img' . DS . $image);
+
+            $this->addFlash('success', 'Saved');
+
+            return $this->redirectToRoute('category_edit', ['id' => $category->getId()]);
+        }
+
+        return ['category' => $category, 'category_form' => $form->createView()];
     }
 
     /**

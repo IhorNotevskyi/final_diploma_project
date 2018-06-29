@@ -1,9 +1,8 @@
 {% extends 'layout.html.twig' %}
 
 {% block main %}
-    <h1>Callback {{ callback.id }}</h1>
-    <p>Name: {{ callback.name }}</p>
-    <p>Phone: {{ callback.phone }}</p>
-    <p>Message: {{ callback.message }}</p>
-    <p>Active: {{ callback.active }}</p>
+    <h1 class="text-center" style="margin-bottom: 30px">Edit callback #{{ callback.id }}</h1>
+    <div class="container" style="max-width: 50%">
+        {{ form(callback_form, {'attr': {'novalidate': 'novalidate'}}) }}
+    </div>
 {% endblock %}

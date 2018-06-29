@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Product
@@ -35,7 +36,9 @@ class Product
      *
      * @Groups({"product"})
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="title", type="string", length=255)
+     *
+     * @Assert\NotBlank()
      */
     private $title;
 
@@ -45,6 +48,8 @@ class Product
      * @Groups({"product"})
      *
      * @ORM\Column(name="description", type="text")
+     *
+     * @Assert\NotBlank()
      */
     private $description;
 
@@ -54,6 +59,8 @@ class Product
      * @Groups({"product"})
      *
      * @ORM\Column(name="price", type="decimal", precision=10, scale=2)
+     *
+     * @Assert\NotBlank()
      */
     private $price;
 
@@ -71,7 +78,10 @@ class Product
      *
      * @Groups({"product"})
      *
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(name="image", type="string", length=255, unique=true)
+     *
+     * @Assert\NotBlank(message="Please, upload the product image.")
+     * @Assert\File(mimeTypes={ "image/jpeg", "image/png" })
      */
     private $image;
     
@@ -92,6 +102,14 @@ class Product
 	 * @ORM\ManyToMany(targetEntity="Tag", inversedBy="products")
 	 */
     private $tags;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -208,7 +226,7 @@ class Product
      */
     public function setImage($image)
     {
-        $this->title = $image;
+        $this->image = $image;
 
         return $this;
     }
@@ -248,14 +266,6 @@ class Product
     }
 
     /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
      * Get active
      *
      * @return boolean
@@ -268,31 +278,35 @@ class Product
     /**
      * Add tag
      *
-     * @param \App\Entity\Tag $tag
+     * @param Tag $tag
      *
-     * @return Product
+     * @return self
      */
-    public function addTag(\App\Entity\Tag $tag)
+    public function addTag(Tag $tag)
     {
-        $this->tags[] = $tag;
-
+        $tag->addProduct($this);
+        $this->tags->add($tag);
         return $this;
     }
 
     /**
      * Remove tag
      *
-     * @param \App\Entity\Tag $tag
+     * @param Tag $tag
+     *
+     * @return self
      */
-    public function removeTag(\App\Entity\Tag $tag)
+    public function removeTag(Tag $tag)
     {
+        $tag->removeProduct($this);
         $this->tags->removeElement($tag);
+        return $this;
     }
 
     /**
      * Get tags
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return ArrayCollection
      */
     public function getTags()
     {

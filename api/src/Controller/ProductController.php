@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Service\FileUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -32,16 +33,21 @@ class ProductController extends Controller
      * @Template()
      *
      * @param Request $request
+     * @param FileUploader $fileUploader
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request, FileUploader $fileUploader)
     {
-        $form = $this->createForm(ProductType::class);
+        $product = new Product();
+        $form = $this->createForm(ProductType::class, $product);
         $form->add('Save', SubmitType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $product = $form->getData();
+            $file = $product->getImage();
+            $fileName = $fileUploader->upload($file);
+            $product->setImage($fileName);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);
@@ -56,15 +62,49 @@ class ProductController extends Controller
     }
 
     /**
-     * @Route("/admin/products/edit/{id}", name="product_edit", requirements={"id": "[0-9]+"})
+     * @Route("/admin/products/{id}", name="product_edit", requirements={"id": "[0-9]+"})
      * @Template()
      *
      * @param Product $product
-     * @return array
+     * @param Request $request
+     * @param FileUploader $fileUploader
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function editAction(Product $product)
+    public function editAction(Product $product, Request $request, FileUploader $fileUploader)
     {
-        return ['product' => $product];
+        $form = $this->createForm(ProductType::class, $product);
+        $form->add('Save', SubmitType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $product = $form->getData();
+            $file = $product->getImage();
+
+            $imageName = $this
+                ->getDoctrine()
+                ->getRepository('App:Product')
+                ->getImageByProduct($product)
+            ;
+
+            $imageFullPath = implode('', array_shift($imageName));
+            $imagePath = SITE . DS . 'img' . DS;
+            $image = str_replace($imagePath, "", $imageFullPath);
+
+            $fileName = $fileUploader->upload($file);
+            $product->setImage($fileName);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($product);
+            $em->flush();
+
+            unlink(ROOT . DS . 'img' . DS . $image);
+
+            $this->addFlash('success', 'Saved');
+
+            return $this->redirectToRoute('product_edit', ['id' => $product->getId()]);
+        }
+
+        return ['product' => $product, 'product_form' => $form->createView()];
     }
 
     /**

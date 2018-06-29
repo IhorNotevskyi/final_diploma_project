@@ -3,6 +3,6 @@
 {% block main %}
     <h1 class="text-center" style="margin-bottom: 30px">Add new callback</h1>
     <div class="container" style="max-width: 50%">
-        {{ form(callback_form) }}
+        {{ form(callback_form, {'attr': {'novalidate': 'novalidate'}}) }}
     </div>
 {% endblock %}
