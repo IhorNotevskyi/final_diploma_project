@@ -1,25 +1,18 @@
 import axios from "axios";
 
-const BASE_API_URL = 'http://127.0.0.1:8000';
+const BASE_API_URL = 'http://127.0.0.1:8000/api';
 
-function getProductsData() {
-    const url = `${BASE_API_URL}/api/products`;
-    return axios.get(url, {headers: {Accept: "application/json"}}).then(response => response.data);
-}
-
-function getCategoriesData() {
-    const url = `${BASE_API_URL}/api/categories`;
-    return axios.get(url, {headers: {Accept: "application/json"}}).then(response => response.data);
+function loadData(type) {
+    return new Promise((resolve) => {
+        const url = `${BASE_API_URL}/${type}`;
+        axios.get(url, {headers: {Accept: "application/json"}})
+            .then(response => resolve(response.data));
+    });
 }
 
 function getProductData(id) {
-    const url = `${BASE_API_URL}/api/products/` + id;
+    const url = `${BASE_API_URL}/products/` + id;
     return axios.get(url, {headers: {Accept: "application/json"}}).then(response => response.data);
 }
 
-function getTagsData() {
-    const url = `${BASE_API_URL}/api/tags`;
-    return axios.get(url, {headers: {Accept: "application/json"}}).then(response => response.data);
-}
-
-export { getProductsData, getProductData, getCategoriesData, getTagsData };
+export { getProductData, loadData };

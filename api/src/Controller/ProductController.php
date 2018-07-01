@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class ProductController extends Controller
 {
@@ -19,6 +20,18 @@ class ProductController extends Controller
      */
     public function indexAction()
     {
+//        $query = $this
+//            ->getDoctrine()
+//            ->getRepository('App:Product')
+//            ->createQueryBuilder('product')
+//            ->orderBy('id', 'DESC')
+//            ->getQuery()
+//        ;
+//
+//        $paginator = new Paginator($query, $fetchJoinCollection = true);
+//
+//        return ['paginator' => $paginator];
+
         $products = $this
             ->getDoctrine()
             ->getRepository('App:Product')

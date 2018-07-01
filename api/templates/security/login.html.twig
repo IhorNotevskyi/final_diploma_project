@@ -12,14 +12,12 @@
 
     <form action="{{ path('login') }}" method="post">
         <div class="form-group row">
-            <label for="username" class="col-sm-2 col-form-label col-form-label-lg">Username</label>
-            <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control form-control-lg d-inline" />
+            <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control form-control-lg d-inline" placeholder="Username">
         </div>
         <div class="form-group row">
-            <label for="password" class="col-sm-2 col-form-label col-form-label-lg">Password</label>
-            <input type="password" id="password" name="_password" class="form-control form-control-lg" />
+            <input type="password" id="password" name="_password" class="form-control form-control-lg" placeholder="Password">
         </div>
-        <input type="hidden" name="_target_path" value="/admin/products" />
+        <input type="hidden" name="_target_path" value="/admin/products">
 
         <button type="submit" class="btn btn-lg btn-secondary">Login</button>
     </form>

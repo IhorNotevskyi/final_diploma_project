@@ -1,10 +1,10 @@
 import React, { Component } from "react";
+import axios from 'axios';
 import { Form, Field } from "react-final-form";
 import SweetAlert from "react-bootstrap-sweetalert";
 
 import feedback from "../img/feedback.png";
 import AdviceStyles from "./AdviceStyles";
-import "../../node_modules/react-bootstrap-sweetalert//lib/dist/SweetAlert";
 
 const normalizePhone = value => {
     if (!value)
@@ -40,7 +40,10 @@ const normalizeMessage = value => {
 
 class Advice extends Component {
     state = {
-        show: false
+        showSuccess: false,
+        showError: false,
+        errorTitle: '',
+        errorMessage: ''
     };
 
     render() {
@@ -51,12 +54,18 @@ class Advice extends Component {
                 </div>
                 <h2 className="text-muted">Leave your phone number so our managers can contact you</h2>
                 <Form
-                    onSubmit={async () => {
-                        const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-                        await sleep(300);
-                        // window.alert(JSON.stringify(values, 0, 2));
-                        const show = () => this.setState({ show: true });
-                        show();
+                    onSubmit={async values => {
+                        axios.post(`http://localhost:8000/api/callbacks`, values)
+                            .then(() => {
+                                this.setState({ showSuccess: true });
+                            }).catch(error => {
+                                error.response.data.violations.map((value) => {
+                                    let fieldName = value.propertyPath[0].toUpperCase() + value.propertyPath.slice(1);
+                                    this.setState({ errorTitle: 'Invalid value in the field "' + fieldName + '"' });
+                                    this.setState({ errorMessage: value.message.slice(0, -1) });
+                                });
+                                this.setState({ showError: true });
+                            });
                     }}
                     validate={values => {
                         const errors = {};
@@ -71,7 +80,7 @@ class Advice extends Component {
                         return errors;
                     }}
                     initialValues={{}}
-                    render={({ handleSubmit, submitting, pristine, values }) => (
+                    render={({ handleSubmit, submitting, pristine }) => (
                         <form onSubmit={handleSubmit}>
                             <Field name="name" parse={normalizeName}>
                                 {({ input, meta }) => (
@@ -116,14 +125,26 @@ class Advice extends Component {
                                 </button>
                             </div>
                             <SweetAlert
-                                show={this.state.show}
+                                show={this.state.showSuccess}
                                 success
+                                confirmBtnBsStyle="default"
+                                confirmBtnStyle={{background: "blue", color: "#fff"}}
                                 title="Submitted"
-                                onConfirm={() => this.setState({ show: false })}
+                                onConfirm={() => this.setState({ showSuccess: false })}
                             >
                                 Our managers will contact you within 5 minutes
                             </SweetAlert>
-                            {/*<pre>{JSON.stringify(values, 0, 2)}</pre>*/}
+                            <SweetAlert
+                                show={this.state.showError}
+                                danger
+                                confirmBtnBsStyle="default"
+                                confirmBtnStyle={{background: "blue", color: "#fff"}}
+                                title="Not submitted"
+                                onConfirm={() => this.setState({ showError: false })}
+                            >
+                                <p className="font-weight-bold h4">{this.state.errorTitle}</p>
+                                <p>{this.state.errorMessage}</p>
+                            </SweetAlert>
                         </form>
                     )}
                 />

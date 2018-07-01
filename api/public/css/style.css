@@ -148,6 +148,16 @@ a.article:hover {
     transition: all 0.3s;
 }
 
+.user-item {
+    margin: 7px 50px 0 0;
+}
+
+.username {
+    margin-left: 6px;
+    font-size: 110%;
+    letter-spacing: .6px;
+}
+
 .fa-sign-out-alt {
     padding: 3px 5px 0 0;
     width: 25px;

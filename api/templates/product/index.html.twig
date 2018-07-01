@@ -20,13 +20,13 @@
                     <th>Controls</th>
                 </tr>
             </thead>
-            <tbody style="vertical-align: center">
+            <tbody>
             {% for product in products %}
                 <tr>
                     <td>{{ product.id }}</td>
                     <td>{{ product.category.name }}</td>
                     <td>{{ product.title }}</td>
-                    <td class="text-justify" style="width: 45%">{{ product.description }}</td>
+                    <td class="text-justify">{{ product.description }}</td>
                     <td>{{ product.price }}</td>
                     <td>
                         {% if product.active %} Yes
@@ -35,7 +35,7 @@
                     </td>
                     <td>
                         {% for tag in product.tags %}
-                            <span style="padding: 3px 7px; line-height: 195%; background: #d1d1ff">{{ tag.name }}</span>
+                            <span style="padding: 3px 7px; line-height: 195%; background: #d5d7ff">{{ tag.name }}</span>
                         {% endfor %}
                     </td>
                     <td>
@@ -57,5 +57,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('js/confirm.js') }}"></script>
+    <script src="{{ asset('js/main.js') }}"></script>
 {% endblock %}

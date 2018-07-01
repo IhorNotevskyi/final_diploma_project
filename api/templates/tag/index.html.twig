@@ -18,9 +18,9 @@
                 <tbody>
                     {% for tag in tags %}
                         <tr>
-                            <td class="align-middle" style="width: 20%">{{ tag.id }}</td>
-                            <td class="align-middle" style="width: 50%">{{ tag.name }}</td>
-                            <td class="align-middle">
+                            <td style="width: 20%">{{ tag.id }}</td>
+                            <td style="width: 50%">{{ tag.name }}</td>
+                            <td>
                                 <a href="{{ path('tag_edit', { id: tag.id }) }}">
                                     <button class="btn btn-sm btn-primary">Edit</button>
                                 </a>
@@ -37,5 +37,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('js/confirm.js') }}"></script>
+    <script src="{{ asset('js/main.js') }}"></script>
 {% endblock %}

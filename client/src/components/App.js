@@ -3,49 +3,33 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, NavItem, Nav, Form, FormControl, Button } from "react-bootstrap";
 
-import Product from "./components/Product";
-import ProductList from "./components/ProductList";
-import Home from "./components/Home";
-import Contacts from "./components/Contacts";
-import Advice from "./components/Advice";
+import Product from "./Product";
+import ProductList from "./ProductList";
+import Home from "./Home";
+import Contacts from "./Contacts";
+import Advice from "./Advice";
 
-import { getProductsData, getCategoriesData, getTagsData } from "./utils/api";
+import { loadData } from "../utils/api";
 
 class App extends Component {
     constructor() {
         super();
         this.state = {
-            categories: [],
             products: [],
+            categories: [],
             tags: []
         };
     }
 
-    getProducts() {
-        getProductsData().then((products) => {
-            this.setState({products});
-            // console.info(this.state.products);
-        });
-    }
-
-    getCategories() {
-        getCategoriesData().then((categories) => {
-            this.setState({categories});
-            // console.info(this.state.categories);
-        });
-    }
-
-    getTags() {
-        getTagsData().then((tags) => {
-            this.setState({tags});
-            // console.info(this.state.tags);
-        });
-    }
-
     componentDidMount() {
-        this.getProducts();
-        this.getCategories();
-        this.getTags();
+        Promise.all(['products', 'categories', 'tags'].map(loadData))
+            .then((response) => {
+                this.setState({
+                    products: response[0],
+                    categories: response[1],
+                    tags: response[2],
+                });
+            });
     }
 
     render() {
@@ -65,7 +49,7 @@ class App extends Component {
                                         <LinkContainer className={"nav-item p-2"} to="/">
                                             <NavItem eventKey={1}>Home</NavItem>
                                         </LinkContainer>
-                                        <LinkContainer className={"nav-item p-2"} to="/products">
+                                        <LinkContainer className={"nav-item p-2"} to="/products/page/1">
                                             <NavItem  eventKey={2}>Products</NavItem>
                                         </LinkContainer>
                                         <LinkContainer className={"nav-item p-2"} to="/contacts">
@@ -76,7 +60,7 @@ class App extends Component {
                                         </LinkContainer>
                                     </Nav>
                                     <Navbar.Form pullRight>
-                                        <Form inline >
+                                        <Form inline>
                                             <FormControl className={"mr-sm-2"} type="text" placeholder="Search" />
                                             <Button type="submit" className={"btn-outline-success my-2 my-sm-0"}>Submit</Button>
                                         </Form>
@@ -93,17 +77,16 @@ class App extends Component {
                                     categories={this.state.categories}
                                 />
                             )} />
-                            <Route exact path="/products" component={ProductList} />
+                            <Route exact path="/products/id/:id" component={Product} />
                             <Route exact path="/contacts" component={Contacts} />
                             <Route exact path="/advice" component={Advice} />
-                            <Route exact path="/products/category/:category/page/:page" render={(props) => (
-                                <ProductList {...props} categories={this.state.categories} />
-                            )} />
-                            <Route exact path="/products/category/:category" render={(props) => (
-                                <ProductList {...props} categories={this.state.categories} />
-                            )} />
                             <Route exact path="/products/page/:page" component={ProductList} />
-                            <Route exact path="/products/id/:id" component={Product} />
+                            <Route exact path="/products/category/:category/page/:page" render={(props) => (
+                                <ProductList
+                                    {...props}
+                                    categories={this.state.categories}
+                                />
+                            )} />
                         </main>
                     </div>
                     <footer className="text-center h4" style={{height: "63px", background: "#17171d", marginBottom: "-100px", color: "#1c8515"}}>

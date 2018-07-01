@@ -17,7 +17,7 @@
                 <th>Controls</th>
             </tr>
             </thead>
-            <tbody style="vertical-align: center">
+            <tbody>
             {% for category in categories %}
                 <tr>
                     <td>{{ category.id }}</td>
@@ -47,5 +47,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('js/confirm.js') }}"></script>
+    <script src="{{ asset('js/main.js') }}"></script>
 {% endblock %}

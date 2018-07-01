@@ -36,6 +36,9 @@ class Callback
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=14)
+     *
+     * @Assert\Length(min="14", max="14")
+     * @Assert\Regex(pattern="^\(\w{3}\) \w{3}-\w{4}$^", match=true)
      */
     private $phone;
 
@@ -49,7 +52,7 @@ class Callback
     /**
      * @var bool
      *
-     * @ORM\Column(name="active", type="boolean", options={"user": true})
+     * @ORM\Column(name="active", type="boolean")
      */
     private $active = true;
 
@@ -66,6 +69,7 @@ class Callback
     public function __construct()
     {
         $this->created = new \DateTime();
+        $this->active = true;
     }
 
     /**

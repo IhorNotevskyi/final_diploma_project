@@ -10,19 +10,15 @@ class Product extends Component {
         this.state = {}
     }
 
-    getProduct(id) {
-        getProductData(id).then((products) => {
-            this.setState(products);
-        });
-    }
-
     componentDidMount() {
         if (this.props.item) {
             this.setState(this.props.item);
             return;
         }
 
-        this.getProduct(this.props.match.params.id);
+        getProductData(this.props.match.params.id).then((products) => {
+            this.setState(products);
+        });
     }
 
     render() {
@@ -34,7 +30,7 @@ class Product extends Component {
 
         return (
             <Grid style={{marginTop: "150px"}}>
-                <Row className={"featurette featurette-divider"}  style={{display: "flex", alignItems: "center"}}>
+                <Row className="featurette featurette-divider d-flex align-items-center">
                     <Col md={5}>
                         <img className="featurette-image img-fluid mx-auto" src={this.state.image} alt="Car" style={{width: "500px", height: "500px"}} />
                     </Col>

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Grid } from "react-bootstrap";
 
-import { getProductsData } from "../utils/api";
+import { loadData } from "../utils/api";
 import Product from "./Product";
 
 class ProductList extends Component {
@@ -13,14 +13,11 @@ class ProductList extends Component {
         };
     }
 
-    getProducts() {
-        getProductsData().then(products => {
-            this.setState({ products });
-        });
-    }
-
     componentDidMount() {
-        this.getProducts();
+        Promise.all(['products'].map(loadData))
+            .then((response) => {
+                this.setState({ products: response[0] });
+            });
     }
 
     render() {
@@ -56,9 +53,6 @@ class ProductList extends Component {
             allPages.push(i);
         }
 
-        if (route.path === '/products' || route.path === '/products/category/:category')
-            currentPage = 1;
-
         return (
             <Grid>
                 <div className="container">
@@ -66,7 +60,7 @@ class ProductList extends Component {
                     { products.slice(perPage * page, perPage * (page + 1)).map(item => (
                         <Product key={item.id} item={item} />
                     ))}
-                    { (route.path === '/products' || route.path === '/products/page/:page') && totalProducts > perPage &&
+                    { (route.path === '/products/page/:page') && totalProducts > perPage &&
                     <nav aria-label="pagination">
                         <ul className="pagination pagination-lg justify-content-center" style={{margin: "150px 0 150px"}}>
 
@@ -98,7 +92,7 @@ class ProductList extends Component {
                         </ul>
                     </nav>
                     }
-                    { (route.path === '/products/category/:category' || route.path === '/products/category/:category/page/:page') && totalProducts > perPage &&
+                    { (route.path === '/products/category/:category/page/:page') && totalProducts > perPage &&
                     <nav aria-label="pagination">
                         <ul className="pagination pagination-lg justify-content-center" style={{margin: "150px 0 150px"}}>
 
