@@ -1,5 +1,9 @@
 {% extends 'layout.html.twig' %}
 
+{% block stylesheets %}
+    <link href="{{ asset('css/submit.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block main %}
     <h1 class="text-center" style="margin-bottom: 30px">Add new category</h1>
     <div class="container" style="max-width: 50%">

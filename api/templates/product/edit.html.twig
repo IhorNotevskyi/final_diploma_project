@@ -1,11 +1,30 @@
 {% extends 'layout.html.twig' %}
 
+{% block stylesheets %}
+    <link href="{{ asset('css/submit.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block main %}
-    <h1 class="text-center" style="margin-bottom: 30px">Edit product #{{ product.id }}</h1>
+    <h1 class="text-center" style="margin-bottom: 30px">Edit product (ID: {{ product.id }})</h1>
     <div class="container" style="max-width: 50%">
-        {{ form(product_form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_start(product_form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_row(product_form.category) }}
+        {{ form_row(product_form.title) }}
+        {{ form_row(product_form.description) }}
+        {{ form_row(product_form.price) }}
+        {{ form_row(product_form.active) }}
+        {{ form_row(product_form.tags) }}
+        <div class="was-validated">
+            <div class="custom-file">
+                {{ form_widget(product_form.image) }}
+                {{ form_label(product_form.image) }}
+            </div>
+        </div>
+        {{ form_end(product_form) }}
         <div class="text-center">
-            <img src="{{ asset(product.image|replace({'http://localhost:8000/': ''})) }}" alt="Image" style="max-width: 400px">
+            {% if product.image %} <img src="{{ asset(product.image|replace({'http://localhost:8000/': ''})) }}" alt="Image" style="max-width: 400px">
+            {% else %} <img src="{{ asset('img/no-image-available-dsadasdas.jpg') }}" alt="No-image" style="max-width: 400px">
+            {% endif %}
         </div>
     </div>
 {% endblock %}

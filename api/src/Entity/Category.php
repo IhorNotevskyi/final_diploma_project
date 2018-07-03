@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -14,6 +16,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="category")
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
+ *
+ * @UniqueEntity("id")
+ * @UniqueEntity("name")
+ * @UniqueEntity("image")
  */
 class Category
 {
@@ -23,6 +29,9 @@ class Category
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Assert\Type("integer")
+     * @Assert\Length(max = 11)
      */
     private $id;
 
@@ -32,6 +41,8 @@ class Category
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      *
      * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Assert\Length(max = 255)
      */
     private $name;
 
@@ -41,6 +52,8 @@ class Category
      * @ORM\Column(name="description", type="text")
      *
      * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Assert\Length(max = 5000)
      */
     private $description;
 
@@ -55,6 +68,8 @@ class Category
 	 * @var bool
 	 *
 	 * @ORM\Column(name="active", type="boolean", options={"user": true})
+     *
+     * @Assert\Type("bool")
 	 */
     private $active = true;
 
@@ -64,9 +79,44 @@ class Category
      * @ORM\Column(name="image", type="string", length=255, unique=true)
      *
      * @Assert\NotBlank(message="Please, upload the category image.")
-     * @Assert\File(mimeTypes={ "image/jpeg" })
+     * @Assert\File(
+     *     maxSize = "3M",
+     *     mimeTypes={ "image/jpeg" }
+     * )
      */
     private $image;
+
+    /**
+     * @Assert\File(
+     *     maxSize = "3M",
+     *     mimeTypes={ "image/jpeg" }
+     * )
+     */
+    private $file;
+
+    /**
+     * Set file
+     *
+     * @param UploadedFile $file
+     *
+     * @return self
+     */
+    public function setFile(UploadedFile $file = null)
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * Get file
+     *
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
 
     /**
      * Constructor

@@ -15,14 +15,36 @@ class TagController extends Controller
     /**
      * @Route("/admin/tags", name="tag_list")
      * @Template()
+     *
+     * @param Request $request
+     * @return array
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $tags = $this
+        $queryBuilder = $this
             ->getDoctrine()
             ->getRepository('App:Tag')
-            ->findBy([], ['id' => 'DESC'])
+            ->createQueryBuilder('bp')
         ;
+
+        if ($request->query->getAlnum('filter_tag')) {
+            $queryBuilder
+                ->where('bp.name LIKE :name')
+                ->setParameter('name', '%' . $request->query->getAlnum('filter_tag') . '%')
+            ;
+        }
+
+        $query = $queryBuilder->getQuery();
+
+        /**
+         * @var $paginator \Knp\Component\Pager\Paginator
+         */
+        $paginator  = $this->get('knp_paginator');
+        $tags = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 5)
+        );
 
         return ['tags' => $tags];
     }

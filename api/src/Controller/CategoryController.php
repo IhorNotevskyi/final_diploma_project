@@ -16,14 +16,38 @@ class CategoryController extends Controller
     /**
      * @Route("/admin/categories", name="category_list")
      * @Template()
+     *
+     * @param Request $request
+     * @return array
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $categories = $this
+        $queryBuilder = $this
             ->getDoctrine()
             ->getRepository('App:Category')
-            ->findBy([], ['id' => 'DESC'])
+            ->createQueryBuilder('bp')
         ;
+
+        if ($request->query->getAlnum('filter_name') || $request->query->getAlnum('filter_description')) {
+            $queryBuilder
+                ->where('bp.name LIKE :name')
+                ->andWhere('bp.description LIKE :description')
+                ->setParameter('name', '%' . $request->query->getAlnum('filter_name') . '%')
+                ->setParameter('description', '%' . $request->query->getAlnum('filter_description') . '%')
+            ;
+        }
+
+        $query = $queryBuilder->getQuery();
+
+        /**
+         * @var $paginator \Knp\Component\Pager\Paginator
+         */
+        $paginator  = $this->get('knp_paginator');
+        $categories = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 5)
+        );
 
         return ['categories' => $categories];
     }
@@ -45,6 +69,7 @@ class CategoryController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $category = $form->getData();
+
             $file = $category->getImage();
             $fileName = $fileUploader->upload($file);
             $category->setImage($fileName);

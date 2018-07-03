@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -17,6 +18,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="product")
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
+ *
+ * @UniqueEntity("id")
+ * @UniqueEntity("image")
  */
 class Product
 {
@@ -28,6 +32,9 @@ class Product
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Assert\Type("integer")
+     * @Assert\Length(max = 11)
      */
     private $id;
 
@@ -39,6 +46,8 @@ class Product
      * @ORM\Column(name="title", type="string", length=255)
      *
      * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Assert\Length(max = 255)
      */
     private $title;
 
@@ -50,6 +59,8 @@ class Product
      * @ORM\Column(name="description", type="text")
      *
      * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Assert\Length(max = 5000)
      */
     private $description;
 
@@ -61,6 +72,8 @@ class Product
      * @ORM\Column(name="price", type="decimal", precision=10, scale=2)
      *
      * @Assert\NotBlank()
+     * @Assert\Type("numeric")
+     * @Assert\Regex(pattern="/^[0-9]{1,8}(\.[0-9][0-9]?)?$/", match=true)
      */
     private $price;
 
@@ -70,6 +83,8 @@ class Product
      * @Groups({"product"})
      *
      * @ORM\Column(name="active", type="boolean", options={"user": true})
+     *
+     * @Assert\Type("bool")
      */
     private $active = true;
 
@@ -81,7 +96,10 @@ class Product
      * @ORM\Column(name="image", type="string", length=255, unique=true)
      *
      * @Assert\NotBlank(message="Please, upload the product image.")
-     * @Assert\File(mimeTypes={ "image/jpeg", "image/png" })
+     * @Assert\File(
+     *     maxSize = "3M",
+     *     mimeTypes={ "image/jpeg", "image/png" }
+     * )
      */
     private $image;
     

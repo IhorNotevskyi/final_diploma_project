@@ -3,15 +3,21 @@
 {% block main %}
     <h1 class="text-center">Tag list</h1>
     <div class="container" style="margin: 0 auto; max-width: 50%">
-        <a href="{{ path('tag_add') }}" class="d-block text-right">
-            <button class="btn btn-lg btn-success" style="padding: 20px 50px">Add new tag</button>
-        </a>
+        <div class="d-flex justify-content-between" style="margin-top: 20px">
+            <form action="{{ path('tag_list') }}" method="get" class="align-self-center form-inline">
+                <input type="text" name="filter_tag" placeholder="Search by name" class="form-control">
+                <button type="submit" class="btn btn-default" style="margin-left: 5px">Search</button>
+            </form>
+            <a href="{{ path('tag_add') }}">
+                <button class="btn btn-lg btn-success" style="padding: 20px 50px">Add new tag</button>
+            </a>
+        </div>
         <div class="table-responsive text-center"  style="margin-top: 20px">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Name</th>
+                        <th>{{ knp_pagination_sortable(tags, 'ID', 'bp.id') }}</th>
+                        <th>{{ knp_pagination_sortable(tags, 'Name', 'bp.name') }}</th>
                         <th>Controls</th>
                     </tr>
                 </thead>
@@ -33,6 +39,9 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class="pagination pagination-lg justify-content-center" style="margin: 50px 0">
+        {{ knp_pagination_render(tags) }}
     </div>
 {% endblock %}
 

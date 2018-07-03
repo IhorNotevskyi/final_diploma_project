@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -13,6 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="callback")
  * @ORM\Entity(repositoryClass="App\Repository\CallbackRepository")
+ *
+ * @UniqueEntity("id")
  */
 class Callback
 {
@@ -22,6 +25,9 @@ class Callback
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Assert\Type("integer")
+     * @Assert\Length(max = 11)
      */
     private $id;
 
@@ -29,6 +35,9 @@ class Callback
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=50, nullable=true, options={"default" = ""})
+     *
+     * @Assert\Type("string")
+     * @Assert\Length(max=50)
      */
     private $name;
 
@@ -37,8 +46,10 @@ class Callback
      *
      * @ORM\Column(name="phone", type="string", length=14)
      *
-     * @Assert\Length(min="14", max="14")
-     * @Assert\Regex(pattern="^\(\w{3}\) \w{3}-\w{4}$^", match=true)
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Assert\Length(min=14, max=14)
+     * @Assert\Regex(pattern="/^\(\w{3}\) \w{3}-\w{4}$/", match=true)
      */
     private $phone;
 
@@ -46,6 +57,9 @@ class Callback
      * @var string
      *
      * @ORM\Column(name="message", type="string", length=255, nullable=true, options={"default" = ""})
+     *
+     * @Assert\Type("string")
+     * @Assert\Length(max=255)
      */
     private $message;
 
@@ -53,6 +67,8 @@ class Callback
      * @var bool
      *
      * @ORM\Column(name="active", type="boolean")
+     *
+     * @Assert\Type("bool")
      */
     private $active = true;
 
@@ -60,6 +76,9 @@ class Callback
      * @var \DateTime
      *
      * @ORM\Column(name="created", type="datetime")
+     *
+     * @Assert\NotBlank()
+     * @Assert\DateTime()
      */
     private $created;
 

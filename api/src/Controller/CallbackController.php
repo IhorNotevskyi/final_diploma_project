@@ -15,14 +15,40 @@ class CallbackController extends Controller
     /**
      * @Route("/admin/callbacks", name="callback_list")
      * @Template()
+     *
+     * @param Request $request
+     * @return array
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $callbacks = $this
+        $queryBuilder = $this
             ->getDoctrine()
             ->getRepository('App:Callback')
-            ->findBy([], ['id' => 'DESC'])
+            ->createQueryBuilder('bp')
         ;
+
+        if ($request->query->getAlnum('filter_name') || $request->query->getAlnum('filter_phone')) {
+            $queryBuilder
+                ->where('bp.name LIKE :name')
+                ->andWhere('bp.phone LIKE :phone')
+                ->andWhere('bp.message LIKE :message')
+                ->setParameter('name', '%' . $request->query->getAlnum('filter_name') . '%')
+                ->setParameter('phone', '%' . $request->query->getAlnum('filter_phone') . '%')
+                ->setParameter('message', '%' . $request->query->getAlnum('filter_message') . '%')
+            ;
+        }
+
+        $query = $queryBuilder->getQuery();
+
+        /**
+         * @var $paginator \Knp\Component\Pager\Paginator
+         */
+        $paginator  = $this->get('knp_paginator');
+        $callbacks = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 5)
+        );
 
         return ['callbacks' => $callbacks];
     }

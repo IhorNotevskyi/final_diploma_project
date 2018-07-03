@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -11,6 +12,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ *
+ * @UniqueEntity("id")
+ * @UniqueEntity("username")
+ * @UniqueEntity("email")
  */
 class User implements UserInterface, \Serializable
 {
@@ -18,6 +23,9 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Assert\Type("integer")
+     * @Assert\Length(max = 11)
      */
     private $id;
 
@@ -25,6 +33,8 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="string", length=25, unique=true)
      *
      * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Assert\Length(max=25)
      */
     private $username;
 
@@ -32,6 +42,8 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="string", length=64)
      *
      * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Assert\Length(max=64)
      */
     private $password;
 
@@ -39,12 +51,16 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="string", length=254, unique=true)
      *
      * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Assert\Length(max=254)
      * @Assert\Email(message="Incorrect email")
      */
     private $email;
 
     /**
      * @ORM\Column(name="active", type="boolean")
+     *
+     * @Assert\Type("bool")
      */
     private $active;
 

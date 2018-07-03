@@ -23,11 +23,11 @@ class App extends Component {
 
     componentDidMount() {
         Promise.all(['products', 'categories', 'tags'].map(loadData))
-            .then((response) => {
+            .then(([products, categories, tags]) => {
                 this.setState({
-                    products: response[0],
-                    categories: response[1],
-                    tags: response[2],
+                    products,
+                    categories,
+                    tags,
                 });
             });
     }

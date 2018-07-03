@@ -16,14 +16,38 @@ class UserController extends Controller
     /**
      * @Route("/admin/users", name="user_list")
      * @Template()
+     *
+     * @param Request $request
+     * @return array
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $users = $this
+        $queryBuilder = $this
             ->getDoctrine()
             ->getRepository('App:User')
-            ->findBy([], ['id' => 'DESC'])
+            ->createQueryBuilder('bp')
         ;
+
+        if ($request->query->getAlnum('filter_username') || $request->query->getAlnum('filter_email')) {
+            $queryBuilder
+                ->where('bp.username LIKE :username')
+                ->andWhere('bp.email LIKE :email')
+                ->setParameter('username', '%' . $request->query->getAlnum('filter_username') . '%')
+                ->setParameter('email', '%' . $request->query->getAlnum('filter_email') . '%')
+            ;
+        }
+
+        $query = $queryBuilder->getQuery();
+
+        /**
+         * @var $paginator \Knp\Component\Pager\Paginator
+         */
+        $paginator  = $this->get('knp_paginator');
+        $users = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 5)
+        );
 
         return ['users' => $users];
     }
@@ -62,15 +86,37 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/admin/users/{id}", name="user_edit", requirements={"id": "[0-9]+"})
+     * @Route("/admin/users/edit/{id}", name="user_edit", requirements={"id": "[0-9]+"})
      * @Template()
      *
      * @param User $user
-     * @return array
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function editAction(User $user)
+    public function editAction(User $user, Request $request, UserPasswordEncoderInterface $encoder)
     {
-        return ['user' => $user];
+        $form = $this->createForm(UserType::class, $user);
+        $form->add('Save', SubmitType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+
+            $password = $user->getPassword();
+            $encodedPassword = $encoder->encodePassword($user, $password);
+            $user->setPassword($encodedPassword);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash('success', 'Saved');
+
+            return $this->redirectToRoute('user_edit', ['id' => $user->getId()]);
+        }
+
+        return ['user' => $user, 'user_form' => $form->createView()];
     }
 
     /**

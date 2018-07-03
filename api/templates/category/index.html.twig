@@ -2,18 +2,28 @@
 
 {% block main %}
     <h1 class="text-center">Category list</h1>
-    <a href="{{ path('category_add') }}" class="d-block text-right">
-        <button class="btn btn-lg btn-success" style="padding: 20px 50px">Add new category</button>
-    </a>
+    <div class="d-flex justify-content-between" style="margin-top: 20px">
+        <form action="{{ path('category_list') }}" method="get" class="align-self-center form-inline">
+            <input type="text" name="filter_name" placeholder="Search by name" class="form-control">
+            <button type="submit" class="btn btn-default" style="margin-left: 5px">Search</button>
+        </form>
+        <form action="{{ path('category_list') }}" method="get" class="align-self-center form-inline">
+            <input type="text" name="filter_description" placeholder="Search by description" class="form-control">
+            <button type="submit" class="btn btn-default" style="margin-left: 5px">Search</button>
+        </form>
+        <a href="{{ path('category_add') }}">
+            <button class="btn btn-lg btn-success" style="padding: 20px 50px">Add new category</button>
+        </a>
+    </div>
     <div class="table-responsive text-center" style="margin-top: 20px">
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Active</th>
-                <th>Image</th>
+                <th>{{ knp_pagination_sortable(categories, 'ID', 'bp.id') }}</th>
+                <th>{{ knp_pagination_sortable(categories, 'Name', 'bp.name') }}</th>
+                <th>{{ knp_pagination_sortable(categories, 'Description', 'bp.description') }}</th>
+                <th>{{ knp_pagination_sortable(categories, 'Active', 'bp.active') }}</th>
+                <th>{{ knp_pagination_sortable(categories, 'Image', 'bp.image') }}</th>
                 <th>Controls</th>
             </tr>
             </thead>
@@ -43,6 +53,9 @@
             {% endfor %}
             <tbody>
         </table>
+    </div>
+    <div class="pagination pagination-lg justify-content-center" style="margin: 50px 0">
+        {{ knp_pagination_render(categories) }}
     </div>
 {% endblock %}
 

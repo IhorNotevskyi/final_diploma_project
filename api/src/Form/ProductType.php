@@ -33,7 +33,7 @@ class ProductType extends AbstractType
             ])
             ->add('image', FileType::class, [
                 'data_class' => null,
-                'label' => 'Upload image (only "image/jpeg" and "image/png")'
+                'label' => 'Upload image (only "image/jpeg" or "image/png". MaxSize: 3M)'
             ])
         ;
     }

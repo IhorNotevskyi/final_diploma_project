@@ -9,36 +9,60 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class ProductController extends Controller
 {
     /**
      * @Route("/admin/products", name="product_list")
      * @Template()
+     *
+     * @param Request $request
+     * @return array
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-//        $query = $this
-//            ->getDoctrine()
-//            ->getRepository('App:Product')
-//            ->createQueryBuilder('product')
-//            ->orderBy('id', 'DESC')
-//            ->getQuery()
-//        ;
-//
-//        $paginator = new Paginator($query, $fetchJoinCollection = true);
-//
-//        return ['paginator' => $paginator];
-
-        $products = $this
+        $queryBuilder = $this
             ->getDoctrine()
             ->getRepository('App:Product')
-            ->findBy([], ['id' => 'DESC'])
+            ->createQueryBuilder('bp')
         ;
 
-        return ['products' => $products];
+        if ($request->query->getAlnum('filter_category') || $request->query->getAlnum('filter_title') || $request->query->getAlnum('filter_description')) {
+            $queryBuilder
+                ->join('bp.category', 'category')
+                ->where('category.name LIKE :category')
+                ->andWhere('bp.title LIKE :title')
+                ->andWhere('bp.description LIKE :description')
+                ->setParameter('category', '%' . $request->query->getAlnum('filter_category') . '%')
+                ->setParameter('title', '%' . $request->query->getAlnum('filter_title') . '%')
+                ->setParameter('description', '%' . $request->query->getAlnum('filter_description') . '%')
+            ;
+        }
+
+        $query = $queryBuilder->getQuery();
+
+        /**
+         * @var $paginator \Knp\Component\Pager\Paginator
+         */
+        $paginator  = $this->get('knp_paginator');
+        $products = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 5)
+        );
+
+        $categories = $this
+            ->getDoctrine()
+            ->getRepository('App:Category')
+            ->createQueryBuilder('category')
+            ->select('category.name')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return ['products' => $products, 'categories' => $categories];
     }
 
     /**
@@ -85,6 +109,9 @@ class ProductController extends Controller
      */
     public function editAction(Product $product, Request $request, FileUploader $fileUploader)
     {
+        $name = $product->getImage();
+
+
         $form = $this->createForm(ProductType::class, $product);
         $form->add('Save', SubmitType::class);
         $form->handleRequest($request);

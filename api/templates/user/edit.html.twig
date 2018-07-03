@@ -1,13 +1,12 @@
 {% extends 'layout.html.twig' %}
 
+{% block stylesheets %}
+    <link href="{{ asset('css/submit.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block main %}
-    <h1>User #{{ user.id }}</h1>
-    <p>Username: {{ user.username }}</p>
-    <p>Password: {{ user.password }}</p>
-    <p>Email: {{ user.email }} $</p>
-    <p>Active:
-        {% if user.active %}
-            Yes
-        {% endif %}
-    </p>
+    <h1 class="text-center" style="margin-bottom: 30px">Edit admin (ID: {{ user.id }})</h1>
+    <div class="container" style="max-width: 50%">
+        {{ form(user_form, {'attr': {'novalidate': 'novalidate'}}) }}
+    </div>
 {% endblock %}

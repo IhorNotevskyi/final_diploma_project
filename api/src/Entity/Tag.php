@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -15,6 +16,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="tag")
  * @ORM\Entity(repositoryClass="App\Repository\TagRepository")
+ *
+ * @UniqueEntity("id")
+ * @UniqueEntity("name")
  */
 class Tag
 {
@@ -26,6 +30,9 @@ class Tag
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Assert\Type("integer")
+     * @Assert\Length(max = 11)
      */
     private $id;
 
@@ -37,6 +44,8 @@ class Tag
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      *
      * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Assert\Length(max = 255)
      */
     private $name;
 
