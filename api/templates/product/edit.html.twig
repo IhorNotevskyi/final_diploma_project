@@ -8,18 +8,20 @@
     <h1 class="text-center" style="margin-bottom: 30px">Edit product (ID: {{ product.id }})</h1>
     <div class="container" style="max-width: 50%">
         {{ form_start(product_form, {'attr': {'novalidate': 'novalidate'}}) }}
-        {{ form_row(product_form.category) }}
-        {{ form_row(product_form.title) }}
-        {{ form_row(product_form.description) }}
-        {{ form_row(product_form.price) }}
-        {{ form_row(product_form.active) }}
-        {{ form_row(product_form.tags) }}
-        <div class="was-validated">
-            <div class="custom-file">
-                {{ form_widget(product_form.image) }}
-                {{ form_label(product_form.image) }}
+            {{ form_row(product_form.category) }}
+            {{ form_row(product_form.title) }}
+            {{ form_row(product_form.description) }}
+            {{ form_row(product_form.price) }}
+            {{ form_row(product_form.active) }}
+            {{ form_row(product_form.tags) }}
+            <div class="was-validated">
+                <div class="custom-file">
+                    {{ form_widget(product_form.image) }}
+                    {{ form_label(product_form.image) }}
+                    <div class="invalid-feedback text-muted">If you don't upload a new image, the old image remains
+                    </div>
+                </div>
             </div>
-        </div>
         {{ form_end(product_form) }}
         <div class="text-center">
             {% if product.image %} <img src="{{ asset(product.image|replace({'http://localhost:8000/': ''})) }}" alt="Image" style="max-width: 400px">

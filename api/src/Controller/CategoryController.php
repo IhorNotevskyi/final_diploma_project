@@ -28,7 +28,10 @@ class CategoryController extends Controller
             ->createQueryBuilder('bp')
         ;
 
-        if ($request->query->getAlnum('filter_name') || $request->query->getAlnum('filter_description')) {
+        if (
+            $request->query->getAlnum('filter_name') ||
+            $request->query->getAlnum('filter_description')
+        ) {
             $queryBuilder
                 ->where('bp.name LIKE :name')
                 ->andWhere('bp.description LIKE :description')
@@ -37,12 +40,16 @@ class CategoryController extends Controller
             ;
         }
 
-        $query = $queryBuilder->getQuery();
+        $query = $queryBuilder
+            ->orderBy('bp.id', 'DESC')
+            ->getQuery()
+        ;
 
         /**
          * @var $paginator \Knp\Component\Pager\Paginator
          */
         $paginator  = $this->get('knp_paginator');
+
         $categories = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
@@ -63,7 +70,7 @@ class CategoryController extends Controller
     public function addAction(Request $request, FileUploader $fileUploader)
     {
         $category = new Category();
-        $form = $this->createForm(CategoryType::class, $category);
+        $form = $this->createForm(CategoryType::class, $category, ['validation_groups' => ['Default', 'add_category']]);
         $form->add('Save', SubmitType::class);
         $form->handleRequest($request);
 
@@ -97,7 +104,7 @@ class CategoryController extends Controller
      */
     public function editAction(Category $category, Request $request, FileUploader $fileUploader)
     {
-        $form = $this->createForm(CategoryType::class, $category);
+        $form = $this->createForm(CategoryType::class, $category, ['validation_groups' => ['Default']]);
         $form->add('Save', SubmitType::class);
         $form->handleRequest($request);
 
@@ -115,14 +122,20 @@ class CategoryController extends Controller
             $imagePath = SITE . DS . 'img' . DS;
             $image = str_replace($imagePath, "", $imageFullPath);
 
-            $fileName = $fileUploader->upload($file);
-            $category->setImage($fileName);
+            if ($file) {
+                $fileName = $fileUploader->upload($file);
+                $category->setImage($fileName);
+            } else {
+                $category->setImage($imageFullPath);
+            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($category);
             $em->flush();
 
-            unlink(ROOT . DS . 'img' . DS . $image);
+            if ($file) {
+                unlink($this->getParameter('image_directory') . DS . $image);
+            }
 
             $this->addFlash('success', 'Saved');
 
@@ -157,7 +170,7 @@ class CategoryController extends Controller
             ->deleteCategory($category)
         ;
 
-        unlink(ROOT . DS . 'img' . DS . $image);
+        unlink($this->getParameter('image_directory') . DS . $image);
 
         return $this->redirectToRoute('category_list');
     }

@@ -7,10 +7,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 require __DIR__.'/../vendor/autoload.php';
 
-define('ROOT', dirname(__FILE__));
-define('DS', DIRECTORY_SEPARATOR);
-define('SITE', 'http://localhost:8000');
-define('IMG_PATH', 'http://localhost:8000' . DS . 'img' . DS);
+const DS = DIRECTORY_SEPARATOR;
+const SITE = 'http://localhost:8000';
+const IMG_PATH = SITE . DS . 'img' . DS;
 
 // The check is to ensure we don't use .env in production
 if (!isset($_SERVER['APP_ENV'])) {

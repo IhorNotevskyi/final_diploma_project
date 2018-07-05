@@ -9,7 +9,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Request;
 
 class ProductController extends Controller
@@ -29,24 +28,36 @@ class ProductController extends Controller
             ->createQueryBuilder('bp')
         ;
 
-        if ($request->query->getAlnum('filter_category') || $request->query->getAlnum('filter_title') || $request->query->getAlnum('filter_description')) {
+        if (
+            $request->query->getAlnum('filter_category') ||
+            $request->query->getAlnum('filter_title') ||
+            $request->query->getAlnum('filter_description') ||
+            $request->query->getAlnum('filter_tags')
+        ) {
             $queryBuilder
                 ->join('bp.category', 'category')
+                ->join('bp.tags', 'tags')
                 ->where('category.name LIKE :category')
                 ->andWhere('bp.title LIKE :title')
                 ->andWhere('bp.description LIKE :description')
-                ->setParameter('category', '%' . $request->query->getAlnum('filter_category') . '%')
+                ->andWhere('tags.name LIKE :tags')
+                ->setParameter('category', '' . $request->query->getAlnum('filter_category') . '')
                 ->setParameter('title', '%' . $request->query->getAlnum('filter_title') . '%')
                 ->setParameter('description', '%' . $request->query->getAlnum('filter_description') . '%')
+                ->setParameter('tags', '%' . $request->query->getAlnum('filter_tags') . '%')
             ;
         }
 
-        $query = $queryBuilder->getQuery();
+        $query = $queryBuilder
+            ->orderBy('bp.id', 'DESC')
+            ->getQuery()
+        ;
 
         /**
          * @var $paginator \Knp\Component\Pager\Paginator
          */
         $paginator  = $this->get('knp_paginator');
+
         $products = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
@@ -56,10 +67,7 @@ class ProductController extends Controller
         $categories = $this
             ->getDoctrine()
             ->getRepository('App:Category')
-            ->createQueryBuilder('category')
-            ->select('category.name')
-            ->getQuery()
-            ->getResult()
+            ->findAll()
         ;
 
         return ['products' => $products, 'categories' => $categories];
@@ -76,7 +84,7 @@ class ProductController extends Controller
     public function addAction(Request $request, FileUploader $fileUploader)
     {
         $product = new Product();
-        $form = $this->createForm(ProductType::class, $product);
+        $form = $this->createForm(ProductType::class, $product, ['validation_groups' => ['Default', 'add_product']]);
         $form->add('Save', SubmitType::class);
         $form->handleRequest($request);
 
@@ -109,10 +117,7 @@ class ProductController extends Controller
      */
     public function editAction(Product $product, Request $request, FileUploader $fileUploader)
     {
-        $name = $product->getImage();
-
-
-        $form = $this->createForm(ProductType::class, $product);
+        $form = $this->createForm(ProductType::class, $product, ['validation_groups' => ['Default']]);
         $form->add('Save', SubmitType::class);
         $form->handleRequest($request);
 
@@ -130,14 +135,20 @@ class ProductController extends Controller
             $imagePath = SITE . DS . 'img' . DS;
             $image = str_replace($imagePath, "", $imageFullPath);
 
-            $fileName = $fileUploader->upload($file);
-            $product->setImage($fileName);
+            if ($file) {
+                $fileName = $fileUploader->upload($file);
+                $product->setImage($fileName);
+            } else {
+                $product->setImage($imageFullPath);
+            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);
             $em->flush();
 
-            unlink(ROOT . DS . 'img' . DS . $image);
+            if ($file) {
+                unlink($this->getParameter('image_directory') . DS . $image);
+            }
 
             $this->addFlash('success', 'Saved');
 
@@ -172,7 +183,7 @@ class ProductController extends Controller
             ->deleteProduct($product)
         ;
 
-        unlink(ROOT . DS . 'img' . DS . $image);
+        unlink($this->getParameter('image_directory') . DS . $image);
 
         return $this->redirectToRoute('product_list');
     }

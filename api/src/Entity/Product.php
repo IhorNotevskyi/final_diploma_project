@@ -95,7 +95,7 @@ class Product
      *
      * @ORM\Column(name="image", type="string", length=255, unique=true)
      *
-     * @Assert\NotBlank(message="Please, upload the product image.")
+     * @Assert\NotBlank(groups={"add_product"}, message="Please, upload the product image.")
      * @Assert\File(
      *     maxSize = "3M",
      *     mimeTypes={ "image/jpeg", "image/png" }

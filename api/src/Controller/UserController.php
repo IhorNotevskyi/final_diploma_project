@@ -28,7 +28,10 @@ class UserController extends Controller
             ->createQueryBuilder('bp')
         ;
 
-        if ($request->query->getAlnum('filter_username') || $request->query->getAlnum('filter_email')) {
+        if (
+            $request->query->getAlnum('filter_username') ||
+            $request->query->getAlnum('filter_email')
+        ) {
             $queryBuilder
                 ->where('bp.username LIKE :username')
                 ->andWhere('bp.email LIKE :email')
@@ -37,12 +40,16 @@ class UserController extends Controller
             ;
         }
 
-        $query = $queryBuilder->getQuery();
+        $query = $queryBuilder
+            ->orderBy('bp.id', 'DESC')
+            ->getQuery()
+        ;
 
         /**
          * @var $paginator \Knp\Component\Pager\Paginator
          */
         $paginator  = $this->get('knp_paginator');
+
         $users = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),

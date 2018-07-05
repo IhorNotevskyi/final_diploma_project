@@ -44,7 +44,8 @@ class ProductType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'App\Entity\Product'
+            'data_class' => 'App\Entity\Product',
+            'validation_groups' => ['add_product', 'Default']
         ));
     }
 

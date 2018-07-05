@@ -31,7 +31,8 @@ class CategoryType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'App\Entity\Category'
+            'data_class' => 'App\Entity\Category',
+            'validation_groups' => ['add_category', 'Default']
         ));
     }
 

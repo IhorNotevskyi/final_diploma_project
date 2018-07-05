@@ -7,7 +7,19 @@
 {% block main %}
     <h1 class="text-center" style="margin-bottom: 30px">Edit category (ID: {{ category.id }})</h1>
     <div class="container" style="max-width: 50%">
-        {{ form(category_form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_start(category_form, {'attr': {'novalidate': 'novalidate'}}) }}
+            {{ form_row(category_form.name) }}
+            {{ form_row(category_form.description) }}
+            {{ form_row(category_form.active) }}
+            <div class="was-validated">
+                <div class="custom-file">
+                    {{ form_widget(category_form.image) }}
+                    {{ form_label(category_form.image) }}
+                    <div class="invalid-feedback text-muted">If you don't upload a new image, the old image remains
+                    </div>
+                </div>
+            </div>
+        {{ form_end(category_form) }}
         <div class="text-center">
             {% if category.image %} <img src="{{ asset(category.image|replace({'http://localhost:8000/': ''})) }}" alt="Image" style="max-width: 400px">
             {% else %} <img src="{{ asset('img/no-image-available-dsadasdas.jpg') }}" alt="No-image" style="max-width: 400px">

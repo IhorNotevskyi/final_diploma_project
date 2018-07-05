@@ -78,45 +78,13 @@ class Category
      *
      * @ORM\Column(name="image", type="string", length=255, unique=true)
      *
-     * @Assert\NotBlank(message="Please, upload the category image.")
+     * @Assert\NotBlank(groups={"add_category"}, message="Please, upload the category image.")
      * @Assert\File(
      *     maxSize = "3M",
      *     mimeTypes={ "image/jpeg" }
      * )
      */
     private $image;
-
-    /**
-     * @Assert\File(
-     *     maxSize = "3M",
-     *     mimeTypes={ "image/jpeg" }
-     * )
-     */
-    private $file;
-
-    /**
-     * Set file
-     *
-     * @param UploadedFile $file
-     *
-     * @return self
-     */
-    public function setFile(UploadedFile $file = null)
-    {
-        $this->file = $file;
-
-        return $this;
-    }
-
-    /**
-     * Get file
-     *
-     * @return UploadedFile
-     */
-    public function getFile()
-    {
-        return $this->file;
-    }
 
     /**
      * Constructor
@@ -173,7 +141,7 @@ class Category
      *
      * @return Category
      */
-    public function setDescription(string $description)
+    public function setDescription($description)
     {
         $this->description = $description;
 
@@ -221,7 +189,7 @@ class Category
      *
      * @return Category
      */
-    public function setActive(bool $active)
+    public function setActive($active)
     {
         $this->active = $active;
 

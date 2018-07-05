@@ -27,7 +27,11 @@ class CallbackController extends Controller
             ->createQueryBuilder('bp')
         ;
 
-        if ($request->query->getAlnum('filter_name') || $request->query->getAlnum('filter_phone')) {
+        if (
+            $request->query->getAlnum('filter_name') ||
+            $request->query->getAlnum('filter_phone') ||
+            $request->query->getAlnum('filter_message')
+        ) {
             $queryBuilder
                 ->where('bp.name LIKE :name')
                 ->andWhere('bp.phone LIKE :phone')
@@ -38,12 +42,16 @@ class CallbackController extends Controller
             ;
         }
 
-        $query = $queryBuilder->getQuery();
+        $query = $queryBuilder
+            ->orderBy('bp.id', 'DESC')
+            ->getQuery()
+        ;
 
         /**
          * @var $paginator \Knp\Component\Pager\Paginator
          */
         $paginator  = $this->get('knp_paginator');
+
         $callbacks = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),

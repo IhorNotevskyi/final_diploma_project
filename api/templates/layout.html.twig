@@ -16,11 +16,11 @@
     <div class="wrapper">
         <nav id="sidebar">
             <div class="sidebar-header">
-                <h3 style="color: #7ffe93">Symfony<br> API - React</h3>
+                <h3 style="color: #1e9116">Symfony<br> API - React</h3>
             </div>
 
             <ul class="list-unstyled components">
-                <p class="admin-panel font-weight-bold" style="color: #ffbb5f">Admin Panel</p>
+                <p class="admin-panel font-weight-bold" style="color: #ff8f47">Admin Panel</p>
                 <li>
                     <a href="{{ path('category_list') }}">Categories</a>
                 </li>
@@ -40,10 +40,10 @@
         </nav>
 
         <div id="content">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <nav class="navbar navbar-expand-lg" id="sidebar-nav-menu">
                 <div class="container-fluid">
 
-                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <button type="button" id="sidebarCollapse" class="hide-sidebar">
                         <i class="fas fa-align-left"></i>
                         <span>Toggle Sidebar</span>
                     </button>
@@ -57,7 +57,7 @@
                                 <a><i class="fas fa-user"></i><span class="username">{{ app.user.username }}</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-info" href="{{ path('logout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                                <a class="btn btn-secondary" href="{{ path('logout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a>
                             </li>
                         </ul>
                     </div>

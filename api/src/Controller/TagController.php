@@ -34,12 +34,16 @@ class TagController extends Controller
             ;
         }
 
-        $query = $queryBuilder->getQuery();
+        $query = $queryBuilder
+            ->orderBy('bp.id', 'DESC')
+            ->getQuery()
+        ;
 
         /**
          * @var $paginator \Knp\Component\Pager\Paginator
          */
         $paginator  = $this->get('knp_paginator');
+
         $tags = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),

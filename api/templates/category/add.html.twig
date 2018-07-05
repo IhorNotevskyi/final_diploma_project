@@ -7,6 +7,16 @@
 {% block main %}
     <h1 class="text-center" style="margin-bottom: 30px">Add new category</h1>
     <div class="container" style="max-width: 50%">
-        {{ form(category_form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_start(category_form, {'attr': {'novalidate': 'novalidate'}}) }}
+            {{ form_row(category_form.name) }}
+            {{ form_row(category_form.description) }}
+            {{ form_row(category_form.active) }}
+            <div class="was-validated">
+                <div class="custom-file">
+                    {{ form_widget(category_form.image) }}
+                    {{ form_label(category_form.image) }}
+                </div>
+            </div>
+        {{ form_end(category_form) }}
     </div>
 {% endblock %}
