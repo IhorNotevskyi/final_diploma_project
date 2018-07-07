@@ -56,7 +56,6 @@ class Tag
 	 */
     private $products;
 
-
     /**
      * Get id
      *
@@ -103,13 +102,12 @@ class Tag
      * Add product
      *
      * @param \App\Entity\Product $product
-     *
-     * @return Tag
      */
-    public function addProduct(\App\Entity\Product $product)
+    public function addProduct(Product $product)
     {
-        $this->products->add($product);
-        return $this;
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+        }
     }
 
     /**
@@ -122,6 +120,7 @@ class Tag
     public function removeProduct(\App\Entity\Product $product)
     {
         $this->products->removeElement($product);
+
         return $this;
     }
 

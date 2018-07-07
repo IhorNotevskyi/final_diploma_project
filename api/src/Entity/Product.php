@@ -117,9 +117,9 @@ class Product
      *
      * @Groups({"product"})
 	 *
-	 * @ORM\ManyToMany(targetEntity="Tag", inversedBy="products")
+	 * @ORM\ManyToMany(targetEntity="Tag", inversedBy="products", cascade={"persist"})
 	 */
-    private $tags;
+    protected $tags;
 
     /**
      * Constructor
@@ -297,28 +297,21 @@ class Product
      * Add tag
      *
      * @param Tag $tag
-     *
-     * @return self
      */
     public function addTag(Tag $tag)
     {
         $tag->addProduct($this);
         $this->tags->add($tag);
-        return $this;
     }
 
     /**
      * Remove tag
      *
      * @param Tag $tag
-     *
-     * @return self
      */
     public function removeTag(Tag $tag)
     {
-        $tag->removeProduct($this);
         $this->tags->removeElement($tag);
-        return $this;
     }
 
     /**

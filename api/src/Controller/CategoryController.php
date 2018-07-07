@@ -70,7 +70,9 @@ class CategoryController extends Controller
     public function addAction(Request $request, FileUploader $fileUploader)
     {
         $category = new Category();
-        $form = $this->createForm(CategoryType::class, $category, ['validation_groups' => ['Default', 'add_category']]);
+        $form = $this->createForm(CategoryType::class, $category, [
+            'validation_groups' => ['Default', 'add_category']
+        ]);
         $form->add('Save', SubmitType::class);
         $form->handleRequest($request);
 
@@ -104,7 +106,9 @@ class CategoryController extends Controller
      */
     public function editAction(Category $category, Request $request, FileUploader $fileUploader)
     {
-        $form = $this->createForm(CategoryType::class, $category, ['validation_groups' => ['Default']]);
+        $form = $this->createForm(CategoryType::class, $category, [
+            'validation_groups' => ['Default']
+        ]);
         $form->add('Save', SubmitType::class);
         $form->handleRequest($request);
 

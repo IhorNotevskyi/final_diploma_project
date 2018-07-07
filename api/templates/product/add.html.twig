@@ -2,6 +2,7 @@
 
 {% block stylesheets %}
     <link href="{{ asset('css/submit.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/tags.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block main %}
@@ -13,7 +14,12 @@
             {{ form_row(product_form.description) }}
             {{ form_row(product_form.price) }}
             {{ form_row(product_form.active) }}
-            {{ form_row(product_form.tags) }}
+            {{ form_label(product_form.tags) }}
+            <ul class="tags" data-prototype="{{ form_widget(product_form.tags.vars.prototype)|e('html_attr') }}" style="list-style-type: none; margin: 5px 0 30px">
+                {% for tag in form_widget(product_form.tags) %}
+                    <li>{{ form_widget(tag.name) }}</li>
+                {% endfor %}
+            </ul>
             <div class="was-validated">
                 <div class="custom-file">
                     {{ form_widget(product_form.image) }}
@@ -22,4 +28,8 @@
             </div>
         {{ form_end(product_form) }}
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/tags.js') }}"></script>
 {% endblock %}

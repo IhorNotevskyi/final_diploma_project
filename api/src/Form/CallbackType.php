@@ -19,9 +19,9 @@ class CallbackType extends AbstractType
             ->add('phone')
             ->add('message')
             ->add('active')
-            ->add('created', DateTimeType::class, array(
+            ->add('created', DateTimeType::class, [
                 'with_seconds' => true
-            ))
+            ])
         ;
     }
 
@@ -30,9 +30,9 @@ class CallbackType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => 'App\Entity\Callback'
-        ));
+        ]);
     }
 
     /**

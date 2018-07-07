@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Service\FileUploader;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -41,7 +42,7 @@ class ProductController extends Controller
                 ->andWhere('bp.title LIKE :title')
                 ->andWhere('bp.description LIKE :description')
                 ->andWhere('tags.name LIKE :tags')
-                ->setParameter('category', '' . $request->query->getAlnum('filter_category') . '')
+                ->setParameter('category', '%' . $request->query->getAlnum('filter_category') . '%')
                 ->setParameter('title', '%' . $request->query->getAlnum('filter_title') . '%')
                 ->setParameter('description', '%' . $request->query->getAlnum('filter_description') . '%')
                 ->setParameter('tags', '%' . $request->query->getAlnum('filter_tags') . '%')
@@ -84,12 +85,34 @@ class ProductController extends Controller
     public function addAction(Request $request, FileUploader $fileUploader)
     {
         $product = new Product();
-        $form = $this->createForm(ProductType::class, $product, ['validation_groups' => ['Default', 'add_product']]);
+        $form = $this->createForm(ProductType::class, $product, [
+            'validation_groups' => ['Default', 'add_product']
+        ]);
         $form->add('Save', SubmitType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $product = $form->getData();
+// =========================================================================
+            $originalTags = new ArrayCollection();
+            foreach ($product->getTags() as $tag) {
+                $originalTags->add($tag);
+            }
+
+            foreach ($originalTags as $tag) {
+                $findTag = $this
+                    ->getDoctrine()
+                    ->getRepository('App:Tag')
+                    ->findOneBy(['name' => $tag->getName()])
+                ;
+
+//                dump($tag->addProduct($product)); die;
+
+                if ($findTag) {
+                    continue;
+                }
+            }
+// =========================================================================
             $file = $product->getImage();
             $fileName = $fileUploader->upload($file);
             $product->setImage($fileName);
@@ -117,11 +140,30 @@ class ProductController extends Controller
      */
     public function editAction(Product $product, Request $request, FileUploader $fileUploader)
     {
-        $form = $this->createForm(ProductType::class, $product, ['validation_groups' => ['Default']]);
+        $em = $this->getDoctrine()->getManager();
+        $originalTags = new ArrayCollection();
+
+        foreach ($product->getTags() as $tag) {
+            $originalTags->add($tag);
+        }
+
+        $form = $this->createForm(ProductType::class, $product, [
+            'validation_groups' => ['Default']
+        ]);
         $form->add('Save', SubmitType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($originalTags as $tag) {
+                if (false === $product->getTags()->contains($tag)) {
+                    $tag->getProducts()->removeElement($product);
+                    $em->persist($tag);
+
+                    // if you wanted to delete the Tag entirely, you can also do that
+                    $em->remove($tag);
+                }
+            }
+
             $product = $form->getData();
             $file = $product->getImage();
 
@@ -142,7 +184,6 @@ class ProductController extends Controller
                 $product->setImage($imageFullPath);
             }
 
-            $em = $this->getDoctrine()->getManager();
             $em->persist($product);
             $em->flush();
 
