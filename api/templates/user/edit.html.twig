@@ -7,6 +7,14 @@
 {% block main %}
     <h1 class="text-center" style="margin-bottom: 30px">Edit admin (ID: {{ user.id }})</h1>
     <div class="container" style="max-width: 50%">
-        {{ form(user_form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_start(user_form, {'attr': {'novalidate': 'novalidate'}}) }}
+            {{ form_row(user_form.username) }}
+            {{ form_row(user_form.password) }}
+            {{ form_row(user_form.email) }}
+            {% if is_granted('ROLE_ADMIN') %}
+                {{ form_row(user_form.active) }}
+            {% endif %}
+        {#{{ form_row(user_form.roles) }}#}
+        {{ form_end(user_form) }}
     </div>
 {% endblock %}

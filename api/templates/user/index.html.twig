@@ -11,9 +11,13 @@
             <input type="text" name="filter_email" placeholder="Search by email" class="form-control">
             <button type="submit" class="btn btn-default" style="margin-left: 5px">Search</button>
         </form>
-        <a href="{{ path('user_add') }}">
-            <button class="btn btn-lg btn-success" style="padding: 20px 50px">Add new admin</button>
-        </a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('user_add') }}">
+                <button class="btn btn-lg btn-success" style="padding: 20px 50px">Add new admin</button>
+            </a>
+        {% else %}
+            <div style="padding: 60px 50px 15px"></div>
+        {% endif %}
     </div>
     <div class="table-responsive text-center" style="margin-top: 20px">
         <table class="table table-striped">
@@ -21,9 +25,9 @@
                 <tr>
                     <th>{{ knp_pagination_sortable(users, 'ID', 'bp.id') }}</th>
                     <th>{{ knp_pagination_sortable(users, 'Username', 'bp.username') }}</th>
-                    <th>{{ knp_pagination_sortable(users, 'Password', 'bp.password') }}</th>
                     <th>{{ knp_pagination_sortable(users, 'Email', 'bp.email') }}</th>
                     <th>{{ knp_pagination_sortable(users, 'Active', 'bp.active') }}</th>
+                    <th>{{ knp_pagination_sortable(users, 'Roles', 'bp.roles') }}</th>
                     <th>Controls</th>
                 </tr>
             </thead>
@@ -32,7 +36,6 @@
                 <tr>
                     <td>{{ user.id }}</td>
                     <td>{{ user.username }}</td>
-                    <td>{{ user.password }}</td>
                     <td>{{ user.email }}</td>
                     <td>
                         {% if user.active %} Yes
@@ -40,12 +43,25 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{{ path('user_edit', { id: user.id }) }}">
-                            <button class="btn btn-sm btn-primary">Edit</button>
-                        </a>
-                        <a href="{{ path('user_delete', { id: user.id }) }}" onclick="return confirmDelete()">
-                            <button class="btn btn-sm btn-danger">Delete</button>
-                        </a>
+                        {% if user.roles|length == 1 %}
+                            User
+                        {% elseif user.roles|length == 2 %}
+                            User + Admin
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if is_granted('EDIT', user) %}
+                            <a href="{{ path('user_edit', { id: user.id }) }}">
+                                <button class="btn btn-sm btn-primary">Edit</button>
+                            </a>
+                        {% else %}
+                            Access denied
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('user_delete', { id: user.id }) }}" onclick="return confirmDelete()">
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

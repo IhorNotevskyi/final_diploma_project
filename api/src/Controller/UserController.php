@@ -4,11 +4,14 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Security\UserVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends Controller
@@ -63,6 +66,8 @@ class UserController extends Controller
      * @Route("/admin/users/add", name="user_add")
      * @Template()
      *
+     * @Security("has_role('ROLE_ADMIN')")
+     *
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
@@ -96,14 +101,27 @@ class UserController extends Controller
      * @Route("/admin/users/edit/{id}", name="user_edit", requirements={"id": "[0-9]+"})
      * @Template()
      *
+     * @param $id
      * @param User $user
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
+     * @param AuthorizationCheckerInterface $authChecker
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function editAction(User $user, Request $request, UserPasswordEncoderInterface $encoder)
+    public function editAction($id, User $user, Request $request, UserPasswordEncoderInterface $encoder, AuthorizationCheckerInterface $authChecker)
     {
+        $admin = $this
+            ->getDoctrine()
+            ->getRepository('App:User')
+            ->find($id)
+        ;
+
+        $this->denyAccessUnlessGranted(UserVoter::EDIT, $admin);
+
         $form = $this->createForm(UserType::class, $user);
+        if ($authChecker->isGranted('ROLE_ADMIN')) {
+            $form->add('active');
+        }
         $form->add('Save', SubmitType::class);
         $form->handleRequest($request);
 
@@ -129,6 +147,8 @@ class UserController extends Controller
     /**
      * @Route("/admin/users/delete/{id}", name="user_delete", requirements={"id": "[0-9]+"})
      * @Template()
+     *
+     * @Security("has_role('ROLE_ADMIN')")
      *
      * @param User $user
      * @return \Symfony\Component\HttpFoundation\RedirectResponse

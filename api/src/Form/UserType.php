@@ -23,7 +23,6 @@ class UserType extends AbstractType
                 'second_options' => ['label' => 'Repeat Password'],
             ])
             ->add('email')
-            ->add('active')
         ;
     }
 

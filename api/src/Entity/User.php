@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity("username")
  * @UniqueEntity("email")
  */
-class User implements UserInterface, \Serializable
+class User implements AdvancedUserInterface, \Serializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -65,13 +65,43 @@ class User implements UserInterface, \Serializable
     private $active;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+    /**
      * User constructor.
      */
     public function __construct()
     {
         $this->active = true;
+        $this->roles = ["ROLE_USER"];
         // may not be needed, see section on salt below
         // $this->salt = md5(uniqid('', true));
+    }
+
+    /**
+     * Returns the roles or permissions granted to the user for security.
+     *
+     * @return array
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+
+        // guarantees that a user always has at least one role for security
+        if (empty($roles)) {
+            $roles[] = 'ROLE_USER';
+        }
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
     }
 
     /**
@@ -100,28 +130,40 @@ class User implements UserInterface, \Serializable
         return $this->password;
     }
 
-    /**
-     * @return array
-     */
-    public function getRoles()
-    {
-        return array('ROLE_USER');
-    }
-
     public function eraseCredentials()
     {
+    }
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->active;
     }
 
     /** @see \Serializable::serialize() */
     public function serialize()
     {
-        return serialize(array(
+        return serialize([
             $this->id,
             $this->username,
             $this->password,
+            $this->active
             // see section on salt below
             // $this->salt,
-        ));
+        ]);
     }
 
     /** @see \Serializable::unserialize() */
@@ -131,9 +173,10 @@ class User implements UserInterface, \Serializable
             $this->id,
             $this->username,
             $this->password,
+            $this->active
             // see section on salt below
             // $this->salt
-            ) = unserialize($serialized, ['allowed_classes' => false]);
+            ) = unserialize($serialized);
     }
 
     /**

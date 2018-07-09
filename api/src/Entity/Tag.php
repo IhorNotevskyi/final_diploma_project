@@ -57,6 +57,14 @@ class Tag
     private $products;
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->products = new ArrayCollection;
+    }
+
+    /**
      * Get id
      *
      * @return int
@@ -88,14 +96,6 @@ class Tag
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->products = new ArrayCollection;
     }
 
     /**

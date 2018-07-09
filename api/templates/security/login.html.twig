@@ -12,13 +12,13 @@
 
     <form action="{{ path('login') }}" method="post">
         <div class="form-group row">
-            <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control form-control-lg d-inline" placeholder="Username">
+            <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control form-control-lg d-inline text-center" placeholder="Enter your username or email address">
         </div>
         <div class="form-group row">
-            <input type="password" id="password" name="_password" class="form-control form-control-lg" placeholder="Password">
+            <input type="password" id="password" name="_password" class="form-control form-control-lg text-center" placeholder="Enter your password">
         </div>
         <input type="hidden" name="_target_path" value="/admin/products">
-
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('private_login_form') }}">
         <button type="submit" class="btn btn-lg btn-secondary">Login</button>
     </form>
     </p>
