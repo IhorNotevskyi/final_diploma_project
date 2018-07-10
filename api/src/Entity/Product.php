@@ -297,21 +297,27 @@ class Product
      * Add tag
      *
      * @param Tag $tag
+     * @return $this
      */
     public function addTag(Tag $tag)
     {
         $tag->addProduct($this);
         $this->tags->add($tag);
+
+        return $this;
     }
 
     /**
      * Remove tag
      *
      * @param Tag $tag
+     * @return $this
      */
     public function removeTag(Tag $tag)
     {
         $this->tags->removeElement($tag);
+
+        return $this;
     }
 
     /**

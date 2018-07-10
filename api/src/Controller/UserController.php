@@ -11,7 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends Controller
@@ -105,10 +104,9 @@ class UserController extends Controller
      * @param User $user
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
-     * @param AuthorizationCheckerInterface $authChecker
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function editAction($id, User $user, Request $request, UserPasswordEncoderInterface $encoder, AuthorizationCheckerInterface $authChecker)
+    public function editAction($id, User $user, Request $request, UserPasswordEncoderInterface $encoder)
     {
         $admin = $this
             ->getDoctrine()
@@ -119,9 +117,6 @@ class UserController extends Controller
         $this->denyAccessUnlessGranted(UserVoter::EDIT, $admin);
 
         $form = $this->createForm(UserType::class, $user);
-        if ($authChecker->isGranted('ROLE_ADMIN')) {
-            $form->add('active');
-        }
         $form->add('Save', SubmitType::class);
         $form->handleRequest($request);
 

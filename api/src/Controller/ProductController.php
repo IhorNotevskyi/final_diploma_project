@@ -93,26 +93,19 @@ class ProductController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $product = $form->getData();
-// =========================================================================
-            $originalTags = new ArrayCollection();
-            foreach ($product->getTags() as $tag) {
-                $originalTags->add($tag);
-            }
 
-            foreach ($originalTags as $tag) {
+            foreach ($product->getTags() as $tag) {
                 $findTag = $this
                     ->getDoctrine()
                     ->getRepository('App:Tag')
                     ->findOneBy(['name' => $tag->getName()])
                 ;
 
-//                dump($tag->addProduct($product)); die;
-
-                if ($findTag) {
-                    continue;
-                }
+                if ($tag->getName() === null) $product->removeTag($tag);
+                elseif (!$findTag) continue;
+                elseif ($findTag) $product->removeTag($tag)->addTag($findTag);
             }
-// =========================================================================
+
             $file = $product->getImage();
             $fileName = $fileUploader->upload($file);
             $product->setImage($fileName);
@@ -140,11 +133,11 @@ class ProductController extends Controller
      */
     public function editAction(Product $product, Request $request, FileUploader $fileUploader)
     {
-        $em = $this->getDoctrine()->getManager();
         $originalTags = new ArrayCollection();
-
+        $tagsArray = [];
         foreach ($product->getTags() as $tag) {
             $originalTags->add($tag);
+            $tagsArray[] = $tag->getName();
         }
 
         $form = $this->createForm(ProductType::class, $product, [
@@ -154,17 +147,46 @@ class ProductController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
             foreach ($originalTags as $tag) {
                 if (false === $product->getTags()->contains($tag)) {
                     $tag->getProducts()->removeElement($product);
                     $em->persist($tag);
-
-                    // if you wanted to delete the Tag entirely, you can also do that
-                    $em->remove($tag);
                 }
             }
 
             $product = $form->getData();
+
+            $newTagsArray = [];
+            foreach ($product->getTags() as $tag) {
+                $newTagsArray[] = $tag->getName();
+
+                $findTag = $this
+                    ->getDoctrine()
+                    ->getRepository('App:Tag')
+                    ->findOneBy(['name' => $tag->getName()])
+                ;
+
+                if ($tag->getName() === null) $product->removeTag($tag);
+                elseif (!$findTag) continue;
+                elseif ($findTag) $product->removeTag($tag)->addTag($findTag);
+            }
+
+            foreach ($tagsArray as $tag) {
+                if (false === in_array($tag, $newTagsArray)) {
+                    $findTag = $this
+                        ->getDoctrine()
+                        ->getRepository('App:Tag')
+                        ->findOneBy(['name' => $tag])
+                    ;
+
+                   if (count($findTag->getProducts()) === 0) {
+                       $em->remove($findTag);
+                   }
+                }
+            }
+
             $file = $product->getImage();
 
             $imageName = $this
@@ -218,11 +240,29 @@ class ProductController extends Controller
         $imagePath = SITE . DS . 'img' . DS;
         $image = str_replace($imagePath, "", $imageFullPath);
 
+        $tagsWithoutRelations = new ArrayCollection();
+
+        foreach ($product->getTags() as $tag) {
+            if (count($tag->getProducts()
+                    ->filter(function(Product $product) {
+                        return $product;
+                    })
+            ) === 1) {
+                $tagsWithoutRelations->add($tag);
+            }
+        }
+
         $this
             ->getDoctrine()
             ->getRepository('App:Product')
             ->deleteProduct($product)
         ;
+
+        $em = $this->getDoctrine()->getManager();
+        foreach ($tagsWithoutRelations as $tag) {
+            $em->remove($tag);
+        }
+        $em->flush();
 
         unlink($this->getParameter('image_directory') . DS . $image);
 

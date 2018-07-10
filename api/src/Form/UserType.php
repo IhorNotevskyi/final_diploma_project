@@ -7,9 +7,17 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class UserType extends AbstractType
 {
+    private $authChecker;
+
+    public function __construct(AuthorizationCheckerInterface $authChecker)
+    {
+        $this->authChecker = $authChecker;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -24,6 +32,10 @@ class UserType extends AbstractType
             ])
             ->add('email')
         ;
+
+        if ($this->authChecker->isGranted('ROLE_ADMIN')) {
+            $builder->add('active');
+        }
     }
 
     /**
