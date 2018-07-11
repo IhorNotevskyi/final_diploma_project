@@ -69,9 +69,10 @@ class UserController extends Controller
      *
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
+     * @param \Swift_Mailer $mailer
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function addAction(Request $request, UserPasswordEncoderInterface $encoder)
+    public function addAction(Request $request, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer)
     {
         $form = $this->createForm(UserType::class);
         $form->add('Save', SubmitType::class);
@@ -80,6 +81,20 @@ class UserController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
 
+            $message = (new \Swift_Message('You have been added to the list of administrators'))
+                ->setFrom('send@example.com')
+                ->setTo($user->getEmail())
+                ->setBody(
+                    $this->renderView(
+                        'mail_message.html.twig', [
+                            'name' => $user->getUsername(),
+                            'password' => $user->getPassword()
+                        ]
+                    ),
+                    'text/html'
+                )
+            ;
+
             $password = $user->getPassword();
             $encodedPassword = $encoder->encodePassword($user, $password);
             $user->setPassword($encodedPassword);
@@ -87,6 +102,8 @@ class UserController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
+
+            $mailer->send($message);
 
             $this->addFlash('success', 'Saved');
 

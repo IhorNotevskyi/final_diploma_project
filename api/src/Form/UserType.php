@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -28,13 +30,25 @@ class UserType extends AbstractType
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options'  => ['label' => 'Password'],
-                'second_options' => ['label' => 'Repeat Password'],
+                'second_options' => ['label' => 'Repeat Password']
             ])
             ->add('email')
         ;
 
         if ($this->authChecker->isGranted('ROLE_ADMIN')) {
-            $builder->add('active');
+            $builder
+                ->add('active', CheckboxType::class, [
+                'data' => true
+                ])
+                ->add('roles', ChoiceType::class, [
+                    'choices' => [
+                        'User' => 'ROLE_USER',
+                        'Admin' => 'ROLE_ADMIN',
+                    ],
+                    'expanded' => true,
+                    'multiple' => true
+                ])
+            ;
         }
     }
 
