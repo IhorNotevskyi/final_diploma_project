@@ -82,7 +82,7 @@ class UserController extends Controller
             $user = $form->getData();
 
             $message = (new \Swift_Message('You have been added to the list of administrators'))
-                ->setFrom('send@example.com')
+                ->setFrom($this->getParameter('swiftmailer.sender_address'))
                 ->setTo($user->getEmail())
                 ->setBody(
                     $this->renderView(

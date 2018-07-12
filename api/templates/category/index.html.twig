@@ -43,11 +43,9 @@
                     </td>
                     <td>
                         <a href="{{ path('category_edit', { id: category.id }) }}">
-                            <button class="btn btn-sm btn-block btn-primary" style="margin-bottom: 3px">Edit</button>
+                            <button class="btn btn-sm btn-block btn-primary" style="margin-bottom: 3px; padding: 4px 12px">Edit</button>
                         </a>
-                        <a href="{{ path('category_delete', { id: category.id }) }}" onclick="return confirmDelete()">
-                            <button class="btn btn-sm btn-block btn-danger">Delete</button>
-                        </a>
+                        <button class="btn btn-sm btn-danger delete-items" id="del_{{ category.id }}" style="padding: 4px 12px">Delete</button>
                     </td>
                 </tr>
             {% endfor %}
@@ -60,5 +58,6 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script src="{{ asset('js/delete/category.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
 {% endblock %}

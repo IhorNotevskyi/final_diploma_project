@@ -1,0 +1,1 @@
+var deleteItem = 'products';

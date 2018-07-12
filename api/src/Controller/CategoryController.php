@@ -123,8 +123,7 @@ class CategoryController extends Controller
             ;
 
             $imageFullPath = implode('', array_shift($imageName));
-            $imagePath = SITE . DS . 'img' . DS;
-            $image = str_replace($imagePath, "", $imageFullPath);
+            $image = str_replace(IMG_PATH, "", $imageFullPath);
 
             if ($file) {
                 $fileName = $fileUploader->upload($file);
@@ -165,8 +164,7 @@ class CategoryController extends Controller
         ;
 
         $imageFullPath = implode('', array_shift($imageName));
-        $imagePath = SITE . DS . 'img' . DS;
-        $image = str_replace($imagePath, "", $imageFullPath);
+        $image = str_replace(IMG_PATH, "", $imageFullPath);
 
         $this
             ->getDoctrine()

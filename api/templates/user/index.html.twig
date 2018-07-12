@@ -58,9 +58,7 @@
                             Access denied
                         {% endif %}
                         {% if is_granted('ROLE_ADMIN') %}
-                            <a href="{{ path('user_delete', { id: user.id }) }}" onclick="return confirmDelete()">
-                                <button class="btn btn-sm btn-danger">Delete</button>
-                            </a>
+                            <button class="btn btn-sm btn-danger delete-items" id="del_{{ user.id }}">Delete</button>
                         {% endif %}
                     </td>
                 </tr>
@@ -74,5 +72,6 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script src="{{ asset('js/delete/user.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
 {% endblock %}

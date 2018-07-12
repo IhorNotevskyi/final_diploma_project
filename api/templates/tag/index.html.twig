@@ -30,9 +30,7 @@
                                 <a href="{{ path('tag_edit', { id: tag.id }) }}">
                                     <button class="btn btn-sm btn-primary">Edit</button>
                                 </a>
-                                <a href="{{ path('tag_delete', { id: tag.id }) }}" onclick="return confirmDelete()">
-                                    <button class="btn btn-sm btn-danger">Delete</button>
-                                </a>
+                                <button class="btn btn-sm btn-danger delete-items" id="del_{{ tag.id }}">Delete</button>
                             </td>
                         </tr>
                     {% endfor %}
@@ -40,11 +38,13 @@
             </table>
         </div>
     </div>
-    <div class="pagination pagination-lg justify-content-center" style="margin: 50px 0">
-        {{ knp_pagination_render(tags) }}
+    <div class="pagination pagination-lg justify-content-center" style="margin: 50px 0" id="pagination">
+        <p id="rowcount">{{ knp_pagination_render(tags) }}</p>
     </div>
 {% endblock %}
 
 {% block javascripts %}
+    <script src="{{ asset('js/delete/tag.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
+    <script src="{{ asset('js/pagination.js') }}"></script>
 {% endblock %}

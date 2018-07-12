@@ -71,11 +71,9 @@
                     </td>
                     <td>
                         <a href="{{ path('product_edit', { id: product.id }) }}">
-                            <button class="btn btn-sm btn-block btn-primary" style="margin-bottom: 3px">Edit</button>
+                            <button class="btn btn-sm btn-block btn-primary" style="margin-bottom: 3px; padding: 4px 12px">Edit</button>
                         </a>
-                        <a href="{{ path('product_delete', { id: product.id }) }}">
-                            <button class="btn btn-sm btn-block btn-danger" onclick="return confirmDelete()">Delete</button>
-                        </a>
+                        <button class="btn btn-sm btn-danger delete-items" id="del_{{ product.id }}" style="padding: 4px 12px">Delete</button>
                     </td>
                 </tr>
             {% endfor %}
@@ -88,5 +86,6 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script src="{{ asset('js/delete/product.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
 {% endblock %}

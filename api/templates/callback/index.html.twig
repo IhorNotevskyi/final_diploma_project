@@ -57,9 +57,7 @@
                         <a href="{{ path('callback_edit', { id: callback.id }) }}">
                             <button class="btn btn-sm btn-primary">Edit</button>
                         </a>
-                        <a href="{{ path('callback_delete', { id: callback.id }) }}" onclick="return confirmDelete()">
-                            <button class="btn btn-sm btn-danger">Delete</button>
-                        </a>
+                        <button class="btn btn-sm btn-danger delete-items" id="del_{{ callback.id }}">Delete</button>
                     </td>
                 </tr>
             {% endfor %}
@@ -72,5 +70,6 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script src="{{ asset('js/delete/callback.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
 {% endblock %}
