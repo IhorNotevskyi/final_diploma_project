@@ -6,6 +6,10 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileUploader
 {
+    const SITE = 'http://localhost:8000';
+
+    const IMG_PATH = self::SITE . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR;
+
     private $targetDirectory;
 
     public function __construct($targetDirectory)
@@ -15,8 +19,7 @@ class FileUploader
 
     public function upload(UploadedFile $file)
     {
-        $fileName = IMG_PATH . md5(uniqid()) . '.' . $file->guessExtension();
-
+        $fileName = self::IMG_PATH . md5(uniqid()) . '.' . $file->guessExtension();
         $file->move($this->getTargetDirectory(), $fileName);
 
         return $fileName;

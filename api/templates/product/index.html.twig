@@ -1,5 +1,7 @@
 {% extends 'layout.html.twig' %}
 
+{% block title %}Product list{% endblock %}
+
 {% block main %}
     <h1 class="text-center">Product list</h1>
     <div class="row" style="margin-top: 40px">
@@ -13,7 +15,7 @@
         </form>
         <div class="col-md-4 d-inline" style="width: 33%"></div>
     </div>
-    <div class="row" style="margin-top: 20px">
+    <div class="row" style="margin-top: 20px; margin-bottom: 35px">
         <form action="{{ path('product_list') }}" method="get" class="col-md-4 form-inline">
             <label>
                 <select name="filter_category" class="form-control">
@@ -30,55 +32,59 @@
             <button type="submit" class="btn btn-default" style="margin-left: 5px">Search</button>
         </form>
     </div>
-    <a href="{{ path('product_add') }}" class="float-right" style="margin-bottom: 20px">
+    <a href="{{ path('product_add') }}" class="float-right" style="margin-top: -92px">
         <button class="btn btn-lg btn-success" style="padding: 20px 50px">Add new product</button>
     </a>
     <div class="table-responsive text-center" style="margin-top: 20px">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>{{ knp_pagination_sortable(products, 'ID', 'bp.id') }}</th>
-                    <th>Category</th>
-                    <th>{{ knp_pagination_sortable(products, 'Title', 'bp.title') }}</th>
-                    <th>{{ knp_pagination_sortable(products, 'Description', 'bp.description') }}</th>
-                    <th>{{ knp_pagination_sortable(products, 'Price, $', 'bp.price') }}</th>
-                    <th>{{ knp_pagination_sortable(products, 'Active', 'bp.active') }}</th>
-                    <th>Tags</th>
-                    <th>{{ knp_pagination_sortable(products, 'Image', 'bp.image') }}</th>
-                    <th>Controls</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for product in products %}
-                <tr>
-                    <td>{{ product.id }}</td>
-                    <td>{{ product.category.name }}</td>
-                    <td>{{ product.title }}</td>
-                    <td class="text-justify">{{ product.description }}</td>
-                    <td>{{ product.price }}</td>
-                    <td>
-                        {% if product.active %} Yes
-                        {% else %} No
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% for tag in product.tags %}
-                            <span style="padding: 3px 7px; line-height: 195%; background: #d5d7ff">{{ tag.name }}</span>
-                        {% endfor %}
-                    </td>
-                    <td>
-                        <img src="{{ asset(product.image|replace({'http://localhost:8000/': ''})) }}" alt="Image" style="width: 100px; height: 100px">
-                    </td>
-                    <td>
-                        <a href="{{ path('product_edit', { id: product.id }) }}">
-                            <button class="btn btn-sm btn-block btn-primary" style="margin-bottom: 3px; padding: 4px 12px">Edit</button>
-                        </a>
-                        <button class="btn btn-sm btn-danger delete-items" id="del_{{ product.id }}" style="padding: 4px 12px">Delete</button>
-                    </td>
-                </tr>
-            {% endfor %}
-            <tbody>
-        </table>
+        {% if products is not empty %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>{{ knp_pagination_sortable(products, 'ID', 'bp.id') }}</th>
+                        <th>Category</th>
+                        <th>{{ knp_pagination_sortable(products, 'Title', 'bp.title') }}</th>
+                        <th>{{ knp_pagination_sortable(products, 'Description', 'bp.description') }}</th>
+                        <th>{{ knp_pagination_sortable(products, 'Price, $', 'bp.price') }}</th>
+                        <th>{{ knp_pagination_sortable(products, 'Active', 'bp.active') }}</th>
+                        <th>Tags</th>
+                        <th>{{ knp_pagination_sortable(products, 'Image', 'bp.image') }}</th>
+                        <th>Controls</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td>{{ product.id }}</td>
+                        <td>{{ product.category.name }}</td>
+                        <td>{{ product.title }}</td>
+                        <td class="text-justify">{{ product.description }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>
+                            {% if product.active %} Yes
+                            {% else %} No
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% for tag in product.tags %}
+                                <span style="padding: 3px 7px; line-height: 195%; background: #d5d7ff">{{ tag.name }}</span>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <img src="{{ asset(product.image|replace({host_name: ''})) }}" alt="Image" style="width: 100px; height: 100px">
+                        </td>
+                        <td>
+                            <a href="{{ path('product_edit', { id: product.id }) }}">
+                                <button class="btn btn-sm btn-block btn-primary" style="margin-bottom: 3px; padding: 4px 12px">Edit</button>
+                            </a>
+                            <button class="btn btn-sm btn-danger delete-items" id="del_{{ product.id }}" style="padding: 4px 12px">Delete</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tbody>
+            </table>
+        {% else %}
+            <h3 class="font-italic" style="margin-top: 60px">The entered value was not found</h3>
+        {% endif %}
     </div>
     <div class="pagination pagination-lg justify-content-center" style="margin: 50px 0">
         {{ knp_pagination_render(products) }}

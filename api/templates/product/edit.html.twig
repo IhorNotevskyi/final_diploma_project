@@ -1,5 +1,7 @@
 {% extends 'layout.html.twig' %}
 
+{% block title %}Edit product (ID: {{ product.id }}){% endblock %}
+
 {% block stylesheets %}
     <link href="{{ asset('css/submit.css') }}" rel="stylesheet">
     <link href="{{ asset('css/tags.css') }}" rel="stylesheet">
@@ -30,7 +32,7 @@
             </div>
         {{ form_end(product_form) }}
         <div class="text-center">
-            {% if product.image %} <img src="{{ asset(product.image|replace({'http://localhost:8000/': ''})) }}" alt="Image" style="max-width: 400px">
+            {% if product.image %} <img src="{{ asset(product.image|replace({host_name: ''})) }}" alt="Image" style="max-width: 400px">
             {% else %} <img src="{{ asset('img/no-image-available-dsadasdas.jpg') }}" alt="No-image" style="max-width: 400px">
             {% endif %}
         </div>

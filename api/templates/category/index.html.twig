@@ -1,5 +1,7 @@
 {% extends 'layout.html.twig' %}
 
+{% block title %}Category list{% endblock %}
+
 {% block main %}
     <h1 class="text-center">Category list</h1>
     <div class="d-flex justify-content-between" style="margin-top: 20px">
@@ -16,41 +18,45 @@
         </a>
     </div>
     <div class="table-responsive text-center" style="margin-top: 20px">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>{{ knp_pagination_sortable(categories, 'ID', 'bp.id') }}</th>
-                <th>{{ knp_pagination_sortable(categories, 'Name', 'bp.name') }}</th>
-                <th>{{ knp_pagination_sortable(categories, 'Description', 'bp.description') }}</th>
-                <th>{{ knp_pagination_sortable(categories, 'Active', 'bp.active') }}</th>
-                <th>{{ knp_pagination_sortable(categories, 'Image', 'bp.image') }}</th>
-                <th>Controls</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for category in categories %}
+        {% if categories is not empty %}
+            <table class="table table-striped">
+                <thead>
                 <tr>
-                    <td>{{ category.id }}</td>
-                    <td>{{ category.name }}</td>
-                    <td class="text-justify">{{ category.description }}</td>
-                    <td>
-                        {% if category.active %} Yes
-                        {% else %} No
-                        {% endif %}
-                    </td>
-                    <td>
-                        <img src="{{ asset(category.image|replace({'http://localhost:8000/': ''})) }}" alt="Image" style="width: 100px; height: 100px">
-                    </td>
-                    <td>
-                        <a href="{{ path('category_edit', { id: category.id }) }}">
-                            <button class="btn btn-sm btn-block btn-primary" style="margin-bottom: 3px; padding: 4px 12px">Edit</button>
-                        </a>
-                        <button class="btn btn-sm btn-danger delete-items" id="del_{{ category.id }}" style="padding: 4px 12px">Delete</button>
-                    </td>
+                    <th>{{ knp_pagination_sortable(categories, 'ID', 'bp.id') }}</th>
+                    <th>{{ knp_pagination_sortable(categories, 'Name', 'bp.name') }}</th>
+                    <th>{{ knp_pagination_sortable(categories, 'Description', 'bp.description') }}</th>
+                    <th>{{ knp_pagination_sortable(categories, 'Active', 'bp.active') }}</th>
+                    <th>{{ knp_pagination_sortable(categories, 'Image', 'bp.image') }}</th>
+                    <th>Controls</th>
                 </tr>
-            {% endfor %}
-            <tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for category in categories %}
+                    <tr>
+                        <td>{{ category.id }}</td>
+                        <td>{{ category.name }}</td>
+                        <td class="text-justify">{{ category.description }}</td>
+                        <td>
+                            {% if category.active %} Yes
+                            {% else %} No
+                            {% endif %}
+                        </td>
+                        <td>
+                            <img src="{{ asset(category.image|replace({host_name: ''})) }}" alt="Image" style="width: 100px; height: 100px">
+                        </td>
+                        <td>
+                            <a href="{{ path('category_edit', { id: category.id }) }}">
+                                <button class="btn btn-sm btn-block btn-primary" style="margin-bottom: 3px; padding: 4px 12px">Edit</button>
+                            </a>
+                            <button class="btn btn-sm btn-danger delete-items" id="del_{{ category.id }}" style="padding: 4px 12px">Delete</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tbody>
+            </table>
+        {% else %}
+            <h3 class="font-italic" style="margin-top: 60px">The entered value was not found</h3>
+        {% endif %}
     </div>
     <div class="pagination pagination-lg justify-content-center" style="margin: 50px 0">
         {{ knp_pagination_render(categories) }}

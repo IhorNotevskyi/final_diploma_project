@@ -50,6 +50,11 @@ class TagController extends Controller
             $request->query->getInt('limit', 5)
         );
 
+        $totalPages = ceil($tags->getTotalItemCount() / $tags->getItemNumberPerPage());
+        if ($request->query->get('page') > $totalPages) {
+            throw $this->createNotFoundException('The requested page was not found');
+        }
+
         return ['tags' => $tags];
     }
 

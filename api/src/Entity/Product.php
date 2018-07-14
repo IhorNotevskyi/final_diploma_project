@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Bukashk0zzz\FilterBundle\Annotation\FilterAnnotation as Filter;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -48,6 +49,7 @@ class Product
      * @Assert\NotBlank()
      * @Assert\Type("string")
      * @Assert\Length(max = 255)
+     * @Filter("StripTags")
      */
     private $title;
 
@@ -61,6 +63,7 @@ class Product
      * @Assert\NotBlank()
      * @Assert\Type("string")
      * @Assert\Length(max = 5000)
+     * @Filter("StripTags")
      */
     private $description;
 
@@ -74,6 +77,7 @@ class Product
      * @Assert\NotBlank()
      * @Assert\Type("numeric")
      * @Assert\Regex(pattern="/^[0-9]{1,8}(\.[0-9][0-9]?)?$/", match=true)
+     * @Filter("StripTags")
      */
     private $price;
 

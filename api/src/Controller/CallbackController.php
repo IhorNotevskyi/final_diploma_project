@@ -58,6 +58,11 @@ class CallbackController extends Controller
             $request->query->getInt('limit', 5)
         );
 
+        $totalPages = ceil($callbacks->getTotalItemCount() / $callbacks->getItemNumberPerPage());
+        if ($request->query->get('page') > $totalPages) {
+            throw $this->createNotFoundException('The requested page was not found');
+        }
+
         return ['callbacks' => $callbacks];
     }
 

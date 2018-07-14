@@ -39,35 +39,35 @@ class Home extends Component {
                     <p className="h2 display-2 text-center" style={{marginBottom: "80px"}}>Categories</p>
                     <Row className="marketing d-flex justify-content-center" style={{marginBottom: "-35px"}}>
                         { this.props.categories.map(category => (
-                        <Col lg={4} key={category.id}>
-                            <img className="rounded-circle" src={category.image} alt="Category Car" style={{width: "160px", height: "160px"}} />
-                            <h2 style={{marginTop: "10px"}}>{category.name}</h2>
-                            <p>{category.description}</p>
-                            <p>
-                                <Link className="btn btn-primary" to={"/products/category/" + category.id + "/page/1"} role="button">
-                                    View products
-                                </Link>
-                            </p>
-                        </Col>
+                            <Col lg={4} key={category.id}>
+                                <img className="rounded-circle" src={category.image} alt="Category Car" style={{width: "160px", height: "160px"}} />
+                                <h2 style={{marginTop: "10px"}}>{category.name}</h2>
+                                <p>{category.description}</p>
+                                <p>
+                                    <Link className="btn btn-primary" to={"/products/category/" + category.id + "/page/1"} role="button">
+                                        View products
+                                    </Link>
+                                </p>
+                            </Col>
                         ))}
                     </Row>
                     <hr className="featurette-divider" />
 
                     { this.props.randomProducts.map(product => (
-                    <Row key={product.id} className="featurette featurette-divider d-flex align-items-center">
-                        <Col md={7}>
-                            <h2 className="featurette-heading" style={{marginTop: "20px"}}>{product.title}</h2>
-                            <p className="lead">{product.description}</p>
-                            <p>
-                                <Link className="btn btn-lg btn-primary" to={"/products/id/" + product.id} role="button">
-                                    View more
-                                </Link>
-                            </p>
-                        </Col>
-                        <Col md={5}>
-                            <img className="featurette-image img-fluid mx-auto" src={product.image} alt="500x500" style={{width: "500px", height: "500px"}} />
-                        </Col>
-                    </Row>
+                        <Row key={product.id} className="featurette featurette-divider d-flex align-items-center">
+                            <Col md={7}>
+                                <h2 className="featurette-heading" style={{marginTop: "20px"}}>{product.title}</h2>
+                                <p className="lead">{product.description}</p>
+                                <p>
+                                    <Link className="btn btn-lg btn-primary" to={"/products/id/" + product.id} role="button">
+                                        View more
+                                    </Link>
+                                </p>
+                            </Col>
+                            <Col md={5}>
+                                <img className="featurette-image img-fluid mx-auto" src={product.image} alt="500x500" style={{width: "500px", height: "500px"}} />
+                            </Col>
+                        </Row>
                     ))}
                 </Grid>
             </div>

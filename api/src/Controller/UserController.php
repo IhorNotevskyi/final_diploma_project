@@ -58,6 +58,11 @@ class UserController extends Controller
             $request->query->getInt('limit', 5)
         );
 
+        $totalPages = ceil($users->getTotalItemCount() / $users->getItemNumberPerPage());
+        if ($request->query->get('page') > $totalPages) {
+            throw $this->createNotFoundException('The requested page was not found');
+        }
+
         return ['users' => $users];
     }
 

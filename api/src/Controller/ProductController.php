@@ -71,6 +71,11 @@ class ProductController extends Controller
             ->findAll()
         ;
 
+        $totalPages = ceil($products->getTotalItemCount() / $products->getItemNumberPerPage());
+        if ($request->query->get('page') > $totalPages) {
+            throw $this->createNotFoundException('The requested page was not found');
+        }
+
         return ['products' => $products, 'categories' => $categories];
     }
 
@@ -196,7 +201,7 @@ class ProductController extends Controller
             ;
 
             $imageFullPath = implode('', array_shift($imageName));
-            $image = str_replace(IMG_PATH, "", $imageFullPath);
+            $image = str_replace($fileUploader::IMG_PATH, "", $imageFullPath);
 
             if ($file) {
                 $fileName = $fileUploader->upload($file);
@@ -209,7 +214,7 @@ class ProductController extends Controller
             $em->flush();
 
             if ($file) {
-                unlink($this->getParameter('image_directory') . DS . $image);
+                unlink($this->getParameter('image_directory') . DIRECTORY_SEPARATOR . $image);
             }
 
             $this->addFlash('success', 'Saved');
@@ -236,7 +241,7 @@ class ProductController extends Controller
         ;
 
         $imageFullPath = implode('', array_shift($imageName));
-        $image = str_replace(IMG_PATH, "", $imageFullPath);
+        $image = str_replace(FileUploader::IMG_PATH, "", $imageFullPath);
 
         $tagsWithoutRelations = new ArrayCollection();
 
@@ -262,7 +267,7 @@ class ProductController extends Controller
         }
         $em->flush();
 
-        unlink($this->getParameter('image_directory') . DS . $image);
+        unlink($this->getParameter('image_directory') . DIRECTORY_SEPARATOR . $image);
 
         return $this->redirectToRoute('product_list');
     }

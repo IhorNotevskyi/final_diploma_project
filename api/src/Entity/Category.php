@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Bukashk0zzz\FilterBundle\Annotation\FilterAnnotation as Filter;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -42,6 +43,7 @@ class Category
      * @Assert\NotBlank()
      * @Assert\Type("string")
      * @Assert\Length(max = 255)
+     * @Filter("StripTags")
      */
     private $name;
 
@@ -53,6 +55,7 @@ class Category
      * @Assert\NotBlank()
      * @Assert\Type("string")
      * @Assert\Length(max = 5000)
+     * @Filter("StripTags")
      */
     private $description;
 

@@ -3,6 +3,7 @@
 parameters:
     locale: 'en'
     image_directory: '%kernel.project_dir%/public/img'
+    host_name: 'http://localhost:8000/'
 
 services:
     # user configuration for services in *this* file

@@ -11,6 +11,15 @@
             "ref": "18727d8f229306860b46955f438e1897421da689"
         }
     },
+    "bukashk0zzz/filter-bundle": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "0f1035a5f7174f09663157a87f9a0849e85ed369"
+        }
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -349,5 +358,11 @@
     },
     "zendframework/zend-eventmanager": {
         "version": "3.2.1"
+    },
+    "zendframework/zend-filter": {
+        "version": "2.8.0"
+    },
+    "zendframework/zend-stdlib": {
+        "version": "3.2.0"
     }
 }

@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Bukashk0zzz\FilterBundle\Annotation\FilterAnnotation as Filter;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -35,6 +36,12 @@ class User implements AdvancedUserInterface, \Serializable
      * @Assert\NotBlank()
      * @Assert\Type("string")
      * @Assert\Length(max=25)
+     * @Assert\Regex(
+     *     pattern="/^[^а-яА-Я<>]{1,25}$/",
+     *     match=true,
+     *     message="This value can contain the Latin alphabet, digits and all symbols except > and <."
+     * )
+     * @Filter("StripTags")
      */
     private $username;
 
@@ -43,7 +50,12 @@ class User implements AdvancedUserInterface, \Serializable
      *
      * @Assert\NotBlank()
      * @Assert\Type("string")
-     * @Assert\Length(max=64)
+     * @Assert\Length(min=6, max=64)
+     * @Assert\Regex(
+     *     pattern="/^(?=[-_a-zA-Z0-9]*?[A-Z])(?=[-_a-zA-Z0-9]*?[a-z])(?=[-_a-zA-Z0-9]*?[0-9])[-_a-zA-Z0-9]{6,64}/",
+     *     match=true,
+     *     message="This value can contain the Latin alphabet, digits, symbols !?#_- and must have at least one uppercase character, one lowercase character and one digit."
+     * )
      */
     private $password;
 
@@ -53,7 +65,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @Assert\NotBlank()
      * @Assert\Type("string")
      * @Assert\Length(max=254)
-     * @Assert\Email(message="Incorrect email")
+     * @Assert\Email()
      */
     private $email;
 

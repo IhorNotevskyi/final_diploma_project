@@ -56,6 +56,11 @@ class CategoryController extends Controller
             $request->query->getInt('limit', 5)
         );
 
+        $totalPages = ceil($categories->getTotalItemCount() / $categories->getItemNumberPerPage());
+        if ($request->query->get('page') > $totalPages) {
+            throw $this->createNotFoundException('The requested page was not found');
+        }
+
         return ['categories' => $categories];
     }
 
@@ -123,7 +128,7 @@ class CategoryController extends Controller
             ;
 
             $imageFullPath = implode('', array_shift($imageName));
-            $image = str_replace(IMG_PATH, "", $imageFullPath);
+            $image = str_replace($fileUploader::IMG_PATH, "", $imageFullPath);
 
             if ($file) {
                 $fileName = $fileUploader->upload($file);
@@ -137,7 +142,7 @@ class CategoryController extends Controller
             $em->flush();
 
             if ($file) {
-                unlink($this->getParameter('image_directory') . DS . $image);
+                unlink($this->getParameter('image_directory') . DIRECTORY_SEPARATOR . $image);
             }
 
             $this->addFlash('success', 'Saved');
@@ -164,7 +169,7 @@ class CategoryController extends Controller
         ;
 
         $imageFullPath = implode('', array_shift($imageName));
-        $image = str_replace(IMG_PATH, "", $imageFullPath);
+        $image = str_replace(FileUploader::IMG_PATH, "", $imageFullPath);
 
         $this
             ->getDoctrine()
@@ -172,7 +177,7 @@ class CategoryController extends Controller
             ->deleteCategory($category)
         ;
 
-        unlink($this->getParameter('image_directory') . DS . $image);
+        unlink($this->getParameter('image_directory') . DIRECTORY_SEPARATOR . $image);
 
         return $this->redirectToRoute('category_list');
     }

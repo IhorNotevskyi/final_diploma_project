@@ -1,5 +1,7 @@
 {% extends 'layout.html.twig' %}
 
+{% block title %}Tag list{% endblock %}
+
 {% block main %}
     <h1 class="text-center">Tag list</h1>
     <div class="container" style="margin: 0 auto; max-width: 50%">
@@ -12,39 +14,42 @@
                 <button class="btn btn-lg btn-success" style="padding: 20px 50px">Add new tag</button>
             </a>
         </div>
-        <div class="table-responsive text-center"  style="margin-top: 20px">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>{{ knp_pagination_sortable(tags, 'ID', 'bp.id') }}</th>
-                        <th>{{ knp_pagination_sortable(tags, 'Name', 'bp.name') }}</th>
-                        <th>Controls</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for tag in tags %}
+        <div class="table-responsive text-center" style="margin-top: 20px">
+            {% if tags is not empty %}
+                <table class="table table-striped">
+                    <thead>
                         <tr>
-                            <td style="width: 20%">{{ tag.id }}</td>
-                            <td style="width: 50%">{{ tag.name }}</td>
-                            <td>
-                                <a href="{{ path('tag_edit', { id: tag.id }) }}">
-                                    <button class="btn btn-sm btn-primary">Edit</button>
-                                </a>
-                                <button class="btn btn-sm btn-danger delete-items" id="del_{{ tag.id }}">Delete</button>
-                            </td>
+                            <th>{{ knp_pagination_sortable(tags, 'ID', 'bp.id') }}</th>
+                            <th>{{ knp_pagination_sortable(tags, 'Name', 'bp.name') }}</th>
+                            <th>Controls</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for tag in tags %}
+                            <tr>
+                                <td style="width: 20%">{{ tag.id }}</td>
+                                <td style="width: 50%">{{ tag.name }}</td>
+                                <td>
+                                    <a href="{{ path('tag_edit', { id: tag.id }) }}">
+                                        <button class="btn btn-sm btn-primary">Edit</button>
+                                    </a>
+                                    <button class="btn btn-sm btn-danger delete-items" id="del_{{ tag.id }}">Delete</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <h3 class="font-italic" style="margin-top: 60px">The entered value was not found</h3>
+            {% endif %}
         </div>
     </div>
-    <div class="pagination pagination-lg justify-content-center" style="margin: 50px 0" id="pagination">
-        <p id="rowcount">{{ knp_pagination_render(tags) }}</p>
+    <div class="pagination pagination-lg justify-content-center" style="margin: 50px 0">
+        {{ knp_pagination_render(tags) }}
     </div>
 {% endblock %}
 
 {% block javascripts %}
     <script src="{{ asset('js/delete/tag.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
-    <script src="{{ asset('js/pagination.js') }}"></script>
 {% endblock %}

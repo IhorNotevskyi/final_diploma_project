@@ -1,5 +1,7 @@
 {% extends 'layout.html.twig' %}
 
+{% block title %}Callback list{% endblock %}
+
 {% block main %}
     <h1 class="text-center">Callback list</h1>
     <div class="d-flex justify-content-between" style="margin-top: 20px">
@@ -20,49 +22,53 @@
         </a>
     </div>
     <div class="table-responsive text-center" style="margin-top: 20px">
-        <table class="table table-striped text-center">
-            <thead>
-                <tr>
-                    <th>{{ knp_pagination_sortable(callbacks, 'ID', 'bp.id') }}</th>
-                    <th>{{ knp_pagination_sortable(callbacks, 'Name', 'bp.name') }}</th>
-                    <th>{{ knp_pagination_sortable(callbacks, 'Phone', 'bp.phone') }}</th>
-                    <th>{{ knp_pagination_sortable(callbacks, 'Message', 'bp.message') }}</th>
-                    <th>{{ knp_pagination_sortable(callbacks, 'Active', 'bp.active') }}</th>
-                    <th>{{ knp_pagination_sortable(callbacks, 'Created', 'bp.created') }}</th>
-                    <th>Controls</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for callback in callbacks %}
-                <tr>
-                    <td>{{ callback.id }}</td>
-                    <td>
-                        {% if callback.message %} {{ callback.name }}
-                        {% else %} &mdash;
+        {% if callbacks is not empty %}
+            <table class="table table-striped text-center">
+                <thead>
+                    <tr>
+                        <th>{{ knp_pagination_sortable(callbacks, 'ID', 'bp.id') }}</th>
+                        <th>{{ knp_pagination_sortable(callbacks, 'Name', 'bp.name') }}</th>
+                        <th>{{ knp_pagination_sortable(callbacks, 'Phone', 'bp.phone') }}</th>
+                        <th>{{ knp_pagination_sortable(callbacks, 'Message', 'bp.message') }}</th>
+                        <th>{{ knp_pagination_sortable(callbacks, 'Active', 'bp.active') }}</th>
+                        <th>{{ knp_pagination_sortable(callbacks, 'Created', 'bp.created') }}</th>
+                        <th>Controls</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for callback in callbacks %}
+                    <tr>
+                        <td>{{ callback.id }}</td>
+                        <td>
+                            {% if callback.message %} {{ callback.name }}
+                            {% else %} &mdash;
+                            {% endif %}
+                        </td>
+                        <td>{{ callback.phone }}</td>
+                        {% if callback.message %}
+                            <td class="text-center">{{ callback.message }}</td>
+                        {% else %}
+                            <td>&mdash;</td>
                         {% endif %}
-                    </td>
-                    <td>{{ callback.phone }}</td>
-                    {% if callback.message %}
-                        <td class="text-center">{{ callback.message }}</td>
-                    {% else %}
-                        <td>&mdash;</td>
-                    {% endif %}
-                    <td>
-                        {% if callback.active %} Yes
-                        {% else %} No
-                        {% endif %}
-                    </td>
-                    <td>{{ callback.created.date|date("j M Y / H:i:s") }}</td>
-                    <td>
-                        <a href="{{ path('callback_edit', { id: callback.id }) }}">
-                            <button class="btn btn-sm btn-primary">Edit</button>
-                        </a>
-                        <button class="btn btn-sm btn-danger delete-items" id="del_{{ callback.id }}">Delete</button>
-                    </td>
-                </tr>
-            {% endfor %}
-            <tbody>
-        </table>
+                        <td>
+                            {% if callback.active %} Yes
+                            {% else %} No
+                            {% endif %}
+                        </td>
+                        <td>{{ callback.created.date|date("j M Y / H:i:s") }}</td>
+                        <td>
+                            <a href="{{ path('callback_edit', { id: callback.id }) }}">
+                                <button class="btn btn-sm btn-primary">Edit</button>
+                            </a>
+                            <button class="btn btn-sm btn-danger delete-items" id="del_{{ callback.id }}">Delete</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tbody>
+            </table>
+        {% else %}
+            <h3 class="font-italic" style="margin-top: 60px">The entered value was not found</h3>
+        {% endif %}
     </div>
     <div class="pagination pagination-lg justify-content-center" style="margin: 50px 0">
         {{ knp_pagination_render(callbacks) }}

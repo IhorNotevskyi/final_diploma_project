@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Bukashk0zzz\FilterBundle\Annotation\FilterAnnotation as Filter;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -38,6 +39,12 @@ class Callback
      *
      * @Assert\Type("string")
      * @Assert\Length(max=50)
+     * @Assert\Regex(
+     *     pattern="/^[a-zA-Z ']{0,50}$/",
+     *     match=true,
+     *     message="This value can contain only the Latin alphabet, space and '."
+     * )
+     * @Filter("StripTags")
      */
     private $name;
 
@@ -50,6 +57,7 @@ class Callback
      * @Assert\Type("string")
      * @Assert\Length(min=14, max=14)
      * @Assert\Regex(pattern="/^\(\w{3}\) \w{3}-\w{4}$/", match=true)
+     * @Filter("StripTags")
      */
     private $phone;
 
@@ -60,6 +68,12 @@ class Callback
      *
      * @Assert\Type("string")
      * @Assert\Length(max=255)
+     * @Assert\Regex(
+     *     pattern="/^[^а-яА-Я<>]{0,255}$/",
+     *     match=true,
+     *     message="This value can contain the Latin alphabet, digits and all characters except > and <."
+     * )
+     * @Filter("StripTags")
      */
     private $message;
 
