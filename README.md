@@ -1,7 +1,6 @@
-In api/.env you need to set up your data.<br>
-In api/.env.dist is an example of filling:<br>
+In api/.env you need to set up your data:<br>
 DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name<br>
-And if you want to send a message on email when creating a new administrator:<br>
+And if you want to send a message on email when creating a new administrator (in api/.env):<br>
 MAILER_URL=gmail://username:password@localhost<br>
 
 Then:<br>
