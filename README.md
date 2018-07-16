@@ -1,5 +1,8 @@
-In api/.env you need to set up your data to access the database<br>
-In api/.env.dist is an example of filling: DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name<br>
+In api/.env you need to set up your data.<br>
+In api/.env.dist is an example of filling:<br>
+DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name<br>
+And if you want to send a message on email when creating a new administrator:<br>
+MAILER_URL=gmail://username:password@localhost<br>
 
 Then:<br>
 cd api<br>
